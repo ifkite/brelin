@@ -1,0 +1,40 @@
+white sp
+; dected
+( dected
+) dected
+; dected
+white sp
+; dected
+letter dected
+ahskas,20
+; dected
+// dected
+letter dected
+k_int, 102
+white sp
+letter dected
+a,20
+= dected
+white sp
+20
+; dected
+white sp
+letter dected
+k_void, 100
+white sp
+letter dected
+bi4555i,20
+== dected
+45
+white sp
+letter dected
+s,20
+) dected
+) dected
+( dected
+( dected
+) dected
+) dected
+; dected
+white sp
+find eof

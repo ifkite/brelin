@@ -1,0 +1,12 @@
+initRul.c: In function ‘initId’:
+initRul.c:7:2: error: ‘a’ undeclared (first use in this function)
+initRul.c:7:2: note: each undeclared identifier is reported only once for each function it appears in
+initRul.c:8:2: error: ‘ch’ undeclared (first use in this function)
+initRul.c:8:7: error: empty character constant
+initRul.c: At top level:
+initRul.c:11:4: error: conflicting types for ‘initId’
+initRul.c:6:4: note: previous definition of ‘initId’ was here
+initRul.c: In function ‘initId’:
+initRul.c:12:2: error: expected expression before ‘.’ token
+initRul.c:13:2: error: expected expression before ‘.’ token
+make: *** [initRul] Error 1
