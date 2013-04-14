@@ -65,7 +65,7 @@ Node enclosure(Rule rul){
 isVisit(Rule rul){
 }
 //generate nest stat node
-Rule genNode(Rule rul){
+//Rule genRul(Rule rul){
 	/*
 	Node tmp_nod;
 	for(){
@@ -80,8 +80,8 @@ Rule genNode(Rule rul){
 	}
 	que_nod.pop_back();
 	*/
-		
-}
+	//copy, and mov pointer position				
+//}
 
 int main(){
 	//initlize
@@ -118,13 +118,28 @@ int main(){
 	//push first nod in queue
 	Node head;//to store head of queue
 	int loop_vec;
+	Rule tmp_start_rul;
+	Node tmp_nod;
 	while(!que_nod.empty()){	
 		//for all rules in head of queue, that all pointers reach the end
 		head = que_nod.front();
 		//chk if point reach end
 		for(loop_vec = 0; loop_vec < head.size(); ++loop_vec){
 			if(!chkPoint(head[loop_vec])){//if return true, then pop front of queue and give a integer value to this stat of rule and mark down
-				genNode(head[loop_vec]);
+				//genRul(head[loop_vec]);
+				//generate a rule
+				tmp_start_rul = {
+					tmp_start_rul.left = head[loop_vec].left, 
+					tmp_start_rul.right = head[loop_vec].right,
+					tmp_start_rul.point_pos = ++head[loop_vec].point_pos;
+					tmp_start_rul.suffix = head[loop_vec].suffix
+				};
+				if(!isVisit(tmp_start_rul)){
+					tmp_nod = enclosure(tmp_start_rul);
+					que_nod.push_back(tmp_nod);
+					vec_rul.push_back(tmp_nod);
+					que_nod.pop_front();
+				}
 			}
 		}
 	}
