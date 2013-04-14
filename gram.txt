@@ -1,0 +1,19 @@
+//这个文法描述一个表达式
+
+[nonterminal]
+	E 
+	H	//表达式
+	T 
+	M	//项
+	F		//因子
+[terminal]
+	id + * ( )
+[start]
+	S
+[production]
+	S => E;
+	E => T H;
+	H => + T H | ;
+	T => F M;
+	M => * F M | ;
+	F => ( E ) | id;
