@@ -1,10 +1,15 @@
+//search 'bug' in this file to see where they are
+#define _GNU_SOURCE//?how can this works
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
+#include "dbg.h"
 #define TERM 1
 #define NTERM 0
-#include "dbg.h"
 #define ID_END #
 #define RUL_SIZ 6
+
+//STL
 #include <vector>
 #include <queue>
 using std::vector;
@@ -18,11 +23,11 @@ typedef struct Identif{
 }Identif;
 
 typedef struct Rule{
-	Identif left;
+	char left;
 	vector<Identif> right;//Identif *right;
 	int point_pos;
 	vector<char> suffix;//char
-
+}Rule;
 //put things by code now
 Identif id_tab[] = {
 	{'E', NTERM}, {'H', NTERM}, {'T', NTERM}, {'M', NTERM}, {'F', NTERM},
@@ -39,6 +44,7 @@ void initId(char ch_id, int term){
 Rule basic_rule[] = {
 };
 */
+Rule basic_rule[RUL_SIZ];
 
 //search id_table by ch_left
 typedef vector<Rule> Node;//node of stat graph
@@ -46,10 +52,35 @@ typedef vector<Rule> Node;//node of stat graph
 queue<Node> que_nod;
 vector<Node> vec_rul;
 
+void getBasicRul(){
+	FILE * fp;
+	char * line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	fp = fopen("./getme", "r");
+	if (fp == NULL)
+		 exit(EXIT_FAILURE);
+	int init_counter = 0;
+	Rule tmp_rul;
+	vector<Identif> tmp_right;
+	while ((read = getline(&line, &len, fp)) != -1) {
+		//initBasicRul();
+		//i can do nothing but trust input, i have no time
+		//how foolish bugs!!!!!
+		//the normal way is to check the id_tab to see whether the
+		//character we get is valid or not
+		
+		//now, we trust input ...
+		tmp_rul.left = line[0];	
+	}
+	if (line)
+		 free(line);
+}
+
 int findStart(char ch){
 	int i;
 	for(i = 0; i < RUL_SIZ; ++i){
-		if(basic_rul[i].left.id_nam == ch){
+		if(basic_rul[i].left == ch){
 			return i;
 		}
 	}
@@ -74,7 +105,7 @@ Node enclosure(Rule rul){
 		Rule new_rul;
 		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
 			//check rule that matchs 
-			if(next_id_nam == basic_tab[loop_basic_tab].left.id_nam){
+			if(next_id_nam == basic_tab[loop_basic_tab].left){
 				new_rul = {
 			            	basic_tab[loop_basic_tab].left,
 							basic_tab[loop_basic_tab].right,
@@ -95,7 +126,7 @@ Node enclosure(Rule rul){
 						//we trust input now, and go on
 						*/
 						for(loop = 0; loop < RUL_SIZ; ++loop){
-							if(basic_tab[loop].left.id_nam == rul.right[point_pos].id_nam){
+							if(basic_tab[loop].left == rul.right[point_pos].id_nam){
 								new_rul.suffix.push_back(
 									basic_tab[loop].right[0].id_nam;//i supposed that the first character is terminal
 									//BUGS:rules have many conditions, just handle the easiest one.
@@ -131,7 +162,7 @@ int isVisit(Rule rul){
 		for(loop_rul = 0; loop_rul < vec_rul[loop_nod].size(); ++loop_rul){
 			if(
 					rul.point_pos == vec_rul[loop_nod][loop_rul].point_pos  &&
-					rul.left.id_nam == vec_rul[loop_nod][loop_rul].left.id_nam &&
+					rul.left == vec_rul[loop_nod][loop_rul].left &&
 					isRightEqu(rul.right, vec_rul[loop_nod][loop_rul].right)
 			  )
 				return 1;
@@ -163,6 +194,7 @@ int main(){
 	char start;
 	start = 'S';
 	int start_rul_num;
+	getBasicRul();
 	start_rul_num = findStart(start);//find the start rule in rule table
 	//check(start_rule, "no start rule matchs");
 	//init start rule
@@ -176,7 +208,7 @@ int main(){
 	*/
 
 	//start_rul = initRul(basic_tab[start_rul_num]);
-	Rule start_rul = {
+	/ule start_rul = {
 		start_rul.left = basic_tab[start_rul_num].left,
 		start_rul.right = basic_tab[start_rul_num].right,
 		start_rul.point_pos = 0
