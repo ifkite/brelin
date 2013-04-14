@@ -60,9 +60,29 @@ Rule initRul(Rule _rule){
 }
 */
 Node enclosure(Rule rul){
+	//if character is not a terminal
+	Node new_nod;
+	if(!rul.right[point_pos].isTerm){
+		int loop_basic_tab;
+		char next_id_nam = rul.right[point_pos].id_nam;
+		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
+			//check rule that matchs 
+			if(next_id_nam == basic_tab[loop_basic_tab].left.id_nam){
+				new_nod.push_back(
+						{
+							basic_tab[loop_basic_tab].left,
+							basic_tab[loop_basic_tab].right,
+							basic_tab[loop_basic_tab].point_pos,
+							rul.suffix
+						}
+				);
+			}
+		}
+	}
 }
 
-isVisit(Rule rul){
+int isVisit(Rule rul){
+	
 }
 //generate nest stat node
 //Rule genRul(Rule rul){
