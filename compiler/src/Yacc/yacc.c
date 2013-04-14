@@ -65,24 +65,67 @@ Node enclosure(Rule rul){
 	if(!rul.right[point_pos].isTerm){
 		int loop_basic_tab;
 		char next_id_nam = rul.right[point_pos].id_nam;
+		Rule new_rul;
 		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
 			//check rule that matchs 
 			if(next_id_nam == basic_tab[loop_basic_tab].left.id_nam){
-				new_nod.push_back(
-						{
-							basic_tab[loop_basic_tab].left,
+				new_rul = {
+			            	basic_tab[loop_basic_tab].left,
 							basic_tab[loop_basic_tab].right,
 							basic_tab[loop_basic_tab].point_pos,
 							rul.suffix
+						  };
+
+				//find first set 
+				if(++rul.point_pos < rul.right.size()){
+					if(!rul.right[point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
+						int loop;
+						/*BAD CODE: [wrong logic]:supose left values of left is unque
+						for(loop = 0; loop < RUL_SIZ; ++loop){
+							if(basic_tab[loop].left.id_nam == rul.right[point_pos].id_nam)
+								break;
 						}
-				);
+						//if no left value matched, ckeck(loop == RUL_SIZ, "invalid nonterminal"); //goto error
+						//we trust input now, and go on
+						*/
+						for(loop = 0; loop < RUL_SIZ; ++loop){
+							if(basic_tab[loop].left.id_nam == rul.right[point_pos].id_nam){
+								new_rul.suffix.push_back(
+									basic_tab[loop].right[0].id_nam;//i supposed that the first character is terminal
+									//BUGS:rules have many conditions, just handle the easiest one.
+									//FIX:need a func to handle this findFirstCh();
+								);
+							}
+						}
+					}
+				}
+				new_rul.suffix.push_back();
+				
 			}
 		}
 	}
 }
+int isRightEqu(vector<char> r1, vector<char> r2){
+	if(r1.size() != r2.size())
+		return 0;
+	for()
+		;
+}
 
 int isVisit(Rule rul){
-	
+	int loop_nod, loop_rul;//loop_nod for travel all node, loop_rul for travel rule in each nod
+	//ATTENTION! BUGS HERE: 
+	for(loop_nod = 0; loop_nod < vec_rul.size(); ++loop_nod){
+		for(loop_rul = 0; loop_rul < vec_rul[loop_nod].size(); ++loop_rul){
+			if(
+					rul.point_pos == vec_rul[loop_nod][loop_rul].point_pos  &&
+					rul.left.id_nam == vec_rul[loop_nod][loop_rul].left.id_nam &&
+					isRightEqu(rul.right, vec_rul[loop_nod][loop_rul].right)
+			  )
+				return 1;
+		}
+	}
+	return 0;
 }
 //generate nest stat node
 //Rule genRul(Rule rul){
