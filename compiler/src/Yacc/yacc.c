@@ -8,6 +8,10 @@
 #include <vector>
 #include <queue>
 using std::vector;
+using std::queue;
+//this code is in c flavor, which i trying to keep
+//do not use iterator for vector
+
 typedef struct Identif{
 	char id_nam;
 	int isTerm;
@@ -24,6 +28,7 @@ Identif id_tab[] = {
 	{'E', NTERM}, {'H', NTERM}, {'T', NTERM}, {'M', NTERM}, {'F', NTERM},
 	{'i', TERM}, {'+', TERM}, {'*', TERM}, {'(', TERM}, {')', TERM}
 };
+
 /*
 void initId(char ch_id, int term){
 }
@@ -62,7 +67,8 @@ Rule initRul(Rule _rule){
 Node enclosure(Rule rul){
 	//if character is not a terminal
 	Node new_nod;
-	if(!rul.right[point_pos].isTerm){
+	new_nod.push_back(rul);
+	if(!rul.right[point_pos].isTerm){//???BUGS: is point_pos reach to the end
 		int loop_basic_tab;
 		char next_id_nam = rul.right[point_pos].id_nam;
 		Rule new_rul;
@@ -104,12 +110,18 @@ Node enclosure(Rule rul){
 			}
 		}
 	}
+	return new_nod;
 }
+
+//seems ok
 int isRightEqu(vector<char> r1, vector<char> r2){
 	if(r1.size() != r2.size())
 		return 0;
-	for()
-		;
+	int loop_right;
+	for(loop_right = 0; loop_right < r1.size(); ++loop_right)
+		if(r1[loop_right] != r2[loop_right])
+			return 0;
+	return 1;
 }
 
 int isVisit(Rule rul){
@@ -207,4 +219,3 @@ int main(){
 		}
 	}
 	return 0;
-
