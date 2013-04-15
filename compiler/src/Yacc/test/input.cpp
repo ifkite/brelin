@@ -1,3 +1,4 @@
+
 //search 'bug' in this file to see where they are
 #define _GNU_SOURCE//?how can this works
 #include<stdio.h>
@@ -65,11 +66,12 @@ void getBasicRul(){
 	if (fp == NULL)
 		 exit(EXIT_FAILURE);
 	
-	int init_counter = 1;
+	int init_counter = 0;
 	Rule tmp_rul;
 	vector<Identif> tmp_right;
 	Identif tmp_id;
 	int loop_id, loop_basic_tab = 0;
+	/*
 	while ((read = getline(&line, &len, fp)) != -1) {
 		tmp_rul.left = line[0];	
 		while(1)
@@ -89,6 +91,29 @@ void getBasicRul(){
 			}
 		tmp_rul.point_pos = 0;	
 		basic_rul[loop_basic_tab++] = tmp_rul;
+	}
+	*/
+
+	while ((read = getline(&line, &len, fp)) != -1) {
+		/*
+		while(1)
+			if(line[init_counter] == ';')
+				break;
+			else{
+				printf("%c", line[init_counter]);
+				++init_counter;
+			}
+		*/
+		init_counter = 0;
+		while(1){
+			if(line[init_counter] == ';')	
+				break;
+			else{
+				printf("%c", line[init_counter]);
+				++init_counter;
+			}
+		}
+		printf("\n");
 	}
 	if (line)
 		 free(line);
@@ -113,6 +138,7 @@ int main(){
 	int loop_basic;
 	int loop_right;
 	int loop_suf;
+	/*
 	for(loop_basic = 0; loop_basic < RUL_SIZ; ++loop_basic){
 		printf("left:%c\n", basic_rul[loop_basic].left)	;
 		printf("right:");
@@ -122,5 +148,6 @@ int main(){
 		for(loop_suf = 0; loop_suf < basic_rul[loop_basic].suffix.size(); ++loop_suf)
 			printf("%c", basic_rul[loop_basic].suffix[loop_suf]);
 	}
+	*/
 	return 0;
 }
