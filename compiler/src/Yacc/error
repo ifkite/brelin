@@ -1,0 +1,11 @@
+yacc.cpp:2:0: warning: "_GNU_SOURCE" redefined [enabled by default]
+<command-line>:0:0: note: this is the location of the previous definition
+yacc.cpp:259:29: warning: character constant too long for its type [enabled by default]
+yacc.cpp: In function ‘int main()’:
+yacc.cpp:259:37: warning: overflow in implicit constant conversion [-Woverflow]
+yacc.cpp:298:1: error: jump to label ‘err’ [-fpermissive]
+yacc.cpp:262:7: error:   from here [-fpermissive]
+yacc.cpp:274:7: error:   crosses initialization of ‘Node tmp_nod’
+yacc.cpp:273:7: error:   crosses initialization of ‘Rule tmp_start_rul’
+yacc.cpp:271:7: error:   crosses initialization of ‘Node head’
+yacc.cpp:264:7: error:   crosses initialization of ‘Node start_nod’

@@ -38,6 +38,7 @@ Identif id_tab[] = {
 	{'i', TERM}, {'+', TERM}, {'*', TERM}, {'(', TERM}, {')', TERM}
 };
 */
+//initID
 map<char, int> id_hash;
 void initIdHash(void){
 
@@ -53,16 +54,7 @@ void initIdHash(void){
 	id_hash['('] = TERM;
 	id_hash[')'] = TERM;
 }
-/*
-void initId(char ch_id, int term){
-}
-*/
-//what basic_rule table may look like
 
-/*
-Rule basic_rule[] = {
-};
-*/
 Rule basic_rul[RUL_SIZ];
 
 //search id_table by ch_left
@@ -238,17 +230,18 @@ int main(){
 	int start_rul_num;
 	initIdHash();
 	getBasicRul();
+	
 	start_rul_num = findStart(start);//find the start rule in rule table
 	//check(start_rule, "no start rule matchs");
 	//init start rule
-	/*
-	 in pure c, written like this
-	Rule start_rul = {
-		.left = basic_tab[start_rul_num].left,
-		.right = basic_tab[start_rul_num].right,
-		.point_pos = 0
-	};
-	*/
+	//
+//	 in pure c, written like this
+//	Rule start_rul = {
+//		.left = basic_tab[start_rul_num].left,
+//		.right = basic_tab[start_rul_num].right,
+//		.point_pos = 0
+//	};
+	//
 
 	//start_rul = initRul(basic_tab[start_rul_num]);
 	Rule start_rul = {
@@ -257,7 +250,8 @@ int main(){
 		start_rul.point_pos = 0
 	};
 	start_rul.suffix.push_back('ID_END');//setSufix(start_rul, "ID_END");	
-	check(0, "checked getBasicRul");
+	
+	//check(0, "checked getBasicRul");
 	//set the succssor of start rule
 	Node start_nod = enclosure(start_rul);//error here
 	que_nod.push(start_nod);
@@ -293,6 +287,6 @@ int main(){
 			}
 		}
 	}
-err:
+	
 	return 0;
 }

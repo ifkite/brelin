@@ -1,6 +1,9 @@
-S => E;
-E => T H;
-H => + T H | ;
-T => F M;
-M => * F M | ;
-F => ( E ) | id;
+S=>E;
+E=>TH;
+H=>+TH;
+H=>;
+T=>FM;
+M=>*FM;
+M=>;
+F=>(E);
+F=>i;

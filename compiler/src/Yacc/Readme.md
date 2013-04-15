@@ -33,3 +33,14 @@ initialize:
 			 [1] how to add, check the successive items 
 		2.1.4 if not, handle his son rules 
 		2.1.5 how until , how to terminate
+
+
+--------------------------------------------------------------------
+a strick input format more than ever:
+1.every id should be in the sets 
+2.; end
+3.no |
+4.left=>right
+5.every id should be presented by one character
+6.digit would be id if you like
+7.no space
