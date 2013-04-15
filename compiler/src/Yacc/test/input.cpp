@@ -8,7 +8,7 @@
 #define TERM 1
 #define NTERM 0
 #define ID_END #
-#define RUL_SIZ 6
+#define RUL_SIZ 9
 
 //STL
 #include <vector>
@@ -46,6 +46,7 @@ void initIdHash(void){
 	id_hash['*'] = TERM;
 	id_hash['('] = TERM;
 	id_hash[')'] = TERM;
+	id_hash[' '] = TERM;
 }
 
 Rule basic_rul[RUL_SIZ];
@@ -56,7 +57,7 @@ typedef vector<Rule> Node;//node of stat graph
 queue<Node> que_nod;
 vector<Node> vec_rul;
 
-#define ID_TAB_SIZ 10
+#define ID_TAB_SIZ 11
 void getBasicRul(){
 	FILE * fp;
 	char * line = NULL;
@@ -66,13 +67,14 @@ void getBasicRul(){
 	if (fp == NULL)
 		 exit(EXIT_FAILURE);
 	
-	int init_counter = 0;
+	int line_counter;
 	Rule tmp_rul;
 	vector<Identif> tmp_right;
 	Identif tmp_id;
 	int loop_id, loop_basic_tab = 0;
-	/*
+	
 	while ((read = getline(&line, &len, fp)) != -1) {
+		/*
 		tmp_rul.left = line[0];	
 		while(1)
 			if(line[init_counter] == '=' || line[init_counter] == '>')
@@ -91,19 +93,27 @@ void getBasicRul(){
 			}
 		tmp_rul.point_pos = 0;	
 		basic_rul[loop_basic_tab++] = tmp_rul;
-	}
-	*/
-
-	while ((read = getline(&line, &len, fp)) != -1) {
-		/*
-		while(1)
-			if(line[init_counter] == ';')
+		*/	
+		line_counter = 3;//right id begin with 3
+		tmp_rul.left = line[0];
+		while(1){
+			if(line[line_counter] == ';'){
 				break;
-			else{
-				printf("%c", line[init_counter]);
-				++init_counter;
 			}
-		*/
+			else{
+				tmp_id.id_nam = line[line_counter];
+				tmp_id.isTerm = id_hash.find(line[line_counter])->second;
+				++line_counter;
+				tmp_rul.right.push_back(tmp_id);
+			}
+		}
+		tmp_rul.point_pos = 0;
+		basic_rul[loop_basic_tab++] = tmp_rul;
+		tmp_rul.right.clear();
+	}
+	
+/*	
+	while ((read = getline(&line, &len, fp)) != -1) {
 		init_counter = 0;
 		while(1){
 			if(line[init_counter] == ';')	
@@ -115,6 +125,7 @@ void getBasicRul(){
 		}
 		printf("\n");
 	}
+*/
 	if (line)
 		 free(line);
 }
@@ -138,7 +149,6 @@ int main(){
 	int loop_basic;
 	int loop_right;
 	int loop_suf;
-	/*
 	for(loop_basic = 0; loop_basic < RUL_SIZ; ++loop_basic){
 		printf("left:%c\n", basic_rul[loop_basic].left)	;
 		printf("right:");
@@ -148,6 +158,5 @@ int main(){
 		for(loop_suf = 0; loop_suf < basic_rul[loop_basic].suffix.size(); ++loop_suf)
 			printf("%c", basic_rul[loop_basic].suffix[loop_suf]);
 	}
-	*/
 	return 0;
 }
