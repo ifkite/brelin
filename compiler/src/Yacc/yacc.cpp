@@ -15,6 +15,7 @@
 #include <map>
 using std::vector;
 using std::queue;
+using std::map;
 //this code is in c flavor, which i trying to keep
 //do not use iterator for vector
 
@@ -31,11 +32,27 @@ typedef struct Rule{
 }Rule;
 //put things by code now
 //should be map
+/*
 Identif id_tab[] = {
 	{'E', NTERM}, {'H', NTERM}, {'T', NTERM}, {'M', NTERM}, {'F', NTERM},
 	{'i', TERM}, {'+', TERM}, {'*', TERM}, {'(', TERM}, {')', TERM}
 };
+*/
+map<char, int> id_hash;
+void initIdHash(void){
 
+	//ugly code, should use loop to replace this
+	id_hash['E'] = NTERM;
+	id_hash['H'] = NTERM;
+	id_hash['T'] = NTERM;
+	id_hash['M'] = NTERM;
+	id_hash['F'] = NTERM;
+	id_hash['i'] = TERM;
+	id_hash['+'] = TERM;
+	id_hash['*'] = TERM;
+	id_hash['('] = TERM;
+	id_hash[')'] = TERM;
+}
 /*
 void initId(char ch_id, int term){
 }
@@ -46,7 +63,7 @@ void initId(char ch_id, int term){
 Rule basic_rule[] = {
 };
 */
-Rule basic_rule[RUL_SIZ];
+Rule basic_rul[RUL_SIZ];
 
 //search id_table by ch_left
 typedef vector<Rule> Node;//node of stat graph
@@ -67,6 +84,7 @@ void getBasicRul(){
 	int init_counter = 1;
 	Rule tmp_rul;
 	vector<Identif> tmp_right;
+	Identif tmp_id;
 	int loop_id, loop_basic_tab = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		//initBasicRul();
@@ -89,10 +107,13 @@ void getBasicRul(){
 			if(line[init_counter] == ';')
 				break;
 			else{
-				tmp_rul.right.push_back(line[init_counter++]);//may bug?
+				tmp_id.id_nam = line[init_counter];
+				tmp_id.isTerm = id_hash.find(line[init_counter])->second;
+				++init_counter;
+				tmp_rul.right.push_back(tmp_id);
 			}
 		tmp_rul.point_pos = 0;	
-		basic_tab[loop_basic_tab++] = tmp_rul;
+		basic_rul[loop_basic_tab++] = tmp_rul;
 	}
 	if (line)
 		 free(line);
@@ -109,7 +130,7 @@ int findStart(char ch){
 }
 
 int chkPoint(Rule rul){
-	return (rul.point_pos == rul.right.size() ? 1 : 0)
+	return (rul.point_pos == rul.right.size() ? 1 : 0);
 }
 /*
 Rule initRul(Rule _rule){	
@@ -120,23 +141,23 @@ Node enclosure(Rule rul){
 	//if character is not a terminal
 	Node new_nod;
 	new_nod.push_back(rul);
-	if(!rul.right[point_pos].isTerm){//???BUGS: is point_pos reach to the end
+	if(!rul.right[rul.point_pos].isTerm){//???BUGS: is point_pos reach to the end
 		int loop_basic_tab;
-		char next_id_nam = rul.right[point_pos].id_nam;
+		char next_id_nam = rul.right[rul.point_pos].id_nam;
 		Rule new_rul;
 		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
 			//check rule that matchs 
-			if(next_id_nam == basic_tab[loop_basic_tab].left){
+			if(next_id_nam == basic_rul[loop_basic_tab].left){
 				new_rul = {
-			            	basic_tab[loop_basic_tab].left,
-							basic_tab[loop_basic_tab].right,
-							basic_tab[loop_basic_tab].point_pos,
+			            	basic_rul[loop_basic_tab].left,
+							basic_rul[loop_basic_tab].right,
+							basic_rul[loop_basic_tab].point_pos,
 							rul.suffix
 						  };
 
 				//find first set 
 				if(++rul.point_pos < rul.right.size()){
-					if(!rul.right[point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
+					if(!rul.right[rul.point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
 						int loop;
 						/*BAD CODE: [wrong logic]:supose left values of left is unque
 						for(loop = 0; loop < RUL_SIZ; ++loop){
@@ -147,9 +168,9 @@ Node enclosure(Rule rul){
 						//we trust input now, and go on
 						*/
 						for(loop = 0; loop < RUL_SIZ; ++loop){
-							if(basic_tab[loop].left == rul.right[point_pos].id_nam){
+							if(basic_rul[loop].left == rul.right[rul.point_pos].id_nam){
 								new_rul.suffix.push_back(
-									basic_tab[loop].right[0].id_nam;//i supposed that the first character is terminal
+									basic_rul[loop].right[0].id_nam//i supposed that the first character is terminal
 									//BUGS:rules have many conditions, just handle the easiest one.
 									//FIX:need a func to handle this findFirstCh();
 								);
@@ -157,7 +178,7 @@ Node enclosure(Rule rul){
 						}
 					}
 				}
-				new_rul.suffix.push_back();
+				//new_rul.suffix.push_back();//BUG
 				
 			}
 		}
@@ -166,12 +187,12 @@ Node enclosure(Rule rul){
 }
 
 //seems ok
-int isRightEqu(vector<char> r1, vector<char> r2){
+int isRightEqu(vector<Identif> r1, vector<Identif> r2){
 	if(r1.size() != r2.size())
 		return 0;
 	int loop_right;
 	for(loop_right = 0; loop_right < r1.size(); ++loop_right)
-		if(r1[loop_right] != r2[loop_right])
+		if(r1[loop_right].id_nam != r2[loop_right].id_nam)
 			return 0;
 	return 1;
 }
@@ -215,6 +236,7 @@ int main(){
 	char start;
 	start = 'S';
 	int start_rul_num;
+	initIdHash();
 	getBasicRul();
 	start_rul_num = findStart(start);//find the start rule in rule table
 	//check(start_rule, "no start rule matchs");
@@ -229,16 +251,16 @@ int main(){
 	*/
 
 	//start_rul = initRul(basic_tab[start_rul_num]);
-	/ule start_rul = {
-		start_rul.left = basic_tab[start_rul_num].left,
-		start_rul.right = basic_tab[start_rul_num].right,
+	Rule start_rul = {
+		start_rul.left = basic_rul[start_rul_num].left,
+		start_rul.right = basic_rul[start_rul_num].right,
 		start_rul.point_pos = 0
 	};
 	start_rul.suffix.push_back('ID_END');//setSufix(start_rul, "ID_END");	
 	check(0, "checked getBasicRul");
 	//set the succssor of start rule
 	Node start_nod = enclosure(start_rul);//error here
-	que_nod.push_back(start_nod);
+	que_nod.push(start_nod);
 	vec_rul.push_back(start_nod);
 	//push start rule in the vector to make the first node
 	//Node nod_start;
@@ -259,17 +281,18 @@ int main(){
 				tmp_start_rul = {
 					tmp_start_rul.left = head[loop_vec].left, 
 					tmp_start_rul.right = head[loop_vec].right,
-					tmp_start_rul.point_pos = ++head[loop_vec].point_pos;
+					tmp_start_rul.point_pos = ++head[loop_vec].point_pos,
 					tmp_start_rul.suffix = head[loop_vec].suffix
 				};
 				if(!isVisit(tmp_start_rul)){
 					tmp_nod = enclosure(tmp_start_rul);
-					que_nod.push_back(tmp_nod);
+					que_nod.push(tmp_nod);
 					vec_rul.push_back(tmp_nod);
-					que_nod.pop_front();
+					que_nod.pop();
 				}
 			}
 		}
 	}
-error:
+err:
 	return 0;
+}
