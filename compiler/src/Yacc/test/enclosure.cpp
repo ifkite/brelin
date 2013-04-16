@@ -139,10 +139,11 @@ int findStart(char ch){
 	}
 	return -1;
 }
-
+/*
 int chkPoint(Rule rul){
-	return (rul.point_pos == rul.right.size() ? 1 : 0);
+	return rul.point_pos == rul.right.size() ;
 }
+*/
 Node enclosure(Rule rul){
 	//if character is not a terminal
 	Node new_nod;
@@ -247,6 +248,7 @@ int main(){
 	start_rul.suffix.push_back('#');
 
 	Node start_nod = enclosure(start_rul);//error here
+	/*
 	int loop_nod;
 	
 	for(loop_nod = 0; loop_nod < start_nod.size(); ++loop_nod){
@@ -257,9 +259,53 @@ int main(){
 		for(loop_suf = 0; loop_suf < start_nod[loop_nod].suffix.size(); ++loop_suf)	
 			printf("%c", start_nod[loop_nod].suffix[loop_suf]);
 		printf("\n");
-	}
+	}*/
 	
 	que_nod.push(start_nod);
-	vec_rul.push_back(start_nod);
+
+	Node head;//to store head of queue
+	int loop_vec;
+	Rule tmp_start_rul;
+	Node tmp_nod;
+	
+	while(!que_nod.empty()){	
+		//for all rules in head of queue, that all pointers reach the end
+		head = que_nod.front();
+		vec_rul.push_back(head);//marked that this nod has been visited
+		//chk if point reach end
+		for(loop_vec = 0; loop_vec < head.size(); ++loop_vec){
+			if(head[loop_vec].point_pos != head[loop_vec].right.size()){//if return true, then pop front of queue and give a integer value to this stat of rule and mark down
+				//genRul(head[loop_vec]);
+				//generate a rule
+				tmp_start_rul.left = head[loop_vec].left;
+				tmp_start_rul.right = head[loop_vec].right;
+				tmp_start_rul.point_pos = head[loop_vec].point_pos + 1;
+				tmp_start_rul.suffix = head[loop_vec].suffix;
+				if(!isVisit(tmp_start_rul)){
+					tmp_nod = enclosure(tmp_start_rul);
+					que_nod.push(tmp_nod);
+				}
+			}
+		}
+		que_nod.pop();
+	}
+	int loop_nod, loop_rul;
+	for(loop_nod = 0;loop_nod < vec_rul.size(); ++loop_nod){
+		printf("%d\n", loop_nod);
+		for(loop_rul = 0; loop_rul < vec_rul[loop_nod].size(); ++loop_rul){
+			printf("left:%c", vec_rul[loop_nod][loop_rul].left);
+			printf("\nright:");
+			for(loop_right = 0; loop_right < vec_rul[loop_nod][loop_rul].right.size(); ++loop_right){
+				printf("%c", vec_rul[loop_nod][loop_rul].right[loop_right].id_nam);
+			}
+			printf("\n:suffix:");
+			for(loop_suf = 0; loop_suf < vec_rul[loop_nod][loop_rul].suffix.size(); ++loop_suf){
+				printf("%c", vec_rul[loop_nod][loop_rul].suffix[loop_suf]);
+			}
+			printf("\n");
+		}
+		printf("\n\n");
+	}
+
 	return 0;
 }
