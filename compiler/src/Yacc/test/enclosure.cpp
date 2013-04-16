@@ -189,8 +189,7 @@ Node enclosure(Rule rul){
 						new_rul.suffix.push_back(rul.right[rul.point_pos].id_nam);
 					}
 				}
-				//new_rul.suffix.push_back();//BUG
-				
+				//BUG:should check if this nod is in nod already
 				new_nod.push_back(new_rul);
 			}
 		}
