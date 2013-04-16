@@ -138,17 +138,15 @@ Node enclosure(Rule rul){
 		char next_id_nam = rul.right[rul.point_pos].id_nam;
 		Rule new_rul;
 		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
+			//find the next rule
 			//check rule that matchs 
 			if(next_id_nam == basic_rul[loop_basic_tab].left){
-				new_rul = {
-			            	basic_rul[loop_basic_tab].left,
-							basic_rul[loop_basic_tab].right,
-							basic_rul[loop_basic_tab].point_pos,
-							rul.suffix
-						  };
-
+				new_rul.left = basic_rul[loop_basic_tab].left;
+				new_rul.right = basic_rul[loop_basic_tab].right;
+				new_rul.point_pos = basic_rul[loop_basic_tab].point_pos;
+				new_rul.suffix = rul.suffix;
 				//find first set 
-				if(++rul.point_pos < rul.right.size()){
+				if(rul.point_pos + 1 < rul.right.size()){
 					if(!rul.right[rul.point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
 						int loop;
 						/*BAD CODE: [wrong logic]:supose left values of left is unque
@@ -161,6 +159,8 @@ Node enclosure(Rule rul){
 						*/
 						for(loop = 0; loop < RUL_SIZ; ++loop){
 							if(basic_rul[loop].left == rul.right[rul.point_pos].id_nam){
+								//i need chk if the suffix is in the vector already or the first of right is null
+								//chkSuf();
 								new_rul.suffix.push_back(
 									basic_rul[loop].right[0].id_nam//i supposed that the first character is terminal
 									//BUGS:rules have many conditions, just handle the easiest one.
@@ -169,9 +169,15 @@ Node enclosure(Rule rul){
 							}
 						}
 					}
+					else{
+						//i need chk if the suffix is in the vector already
+						//chkSuf();
+						new_rul.suffix.push_back(rul.right[rul.point_pos].id_nam);
+					}
 				}
 				//new_rul.suffix.push_back();//BUG
 				
+				new_nod.push_back(new_rul);
 			}
 		}
 	}
@@ -204,57 +210,8 @@ int isVisit(Rule rul){
 	}
 	return 0;
 }
-//generate nest stat node
-//Rule genRul(Rule rul){
-	/*
-	Node tmp_nod;
-	for(){
-		//generate one rule first
-		;//gen_rul 
-		;
-		if(!isVisit(gen_rule)){
-			tmp_nod = enclosure(gen_rule);//enclosure will generate vector rules
-			que_nod.push_back(tmp_nod);
-			vec_rul.push_back(tmp_nod);
-		}
-	}
-	que_nod.pop_back();
-	*/
-	//copy, and mov pointer position				
-//}
 
 int main(){
-	//initlize
-	/*old code
-	char start;
-	start = 'S';
-	int start_rul_num;
-	initIdHash();
-	getBasicRul();
-	
-	start_rul_num = findStart(start);//find the start rule in rule table
-	//check(start_rule, "no start rule matchs");
-	//init start rule
-	//
-//	 in pure c, written like this
-//	Rule start_rul = {
-//		.left = basic_tab[start_rul_num].left,
-//		.right = basic_tab[start_rul_num].right,
-//		.point_pos = 0
-//	};
-	//
-
-	//start_rul = initRul(basic_tab[start_rul_num]);
-	Rule start_rul = {
-		start_rul.left = basic_rul[start_rul_num].left,
-		start_rul.right = basic_rul[start_rul_num].right,
-		start_rul.point_pos = 0
-	};
-	start_rul.suffix.push_back('ID_END');//setSufix(start_rul, "ID_END");	
-	old code*/
-
-	//check(0, "checked getBasicRul");
-	//set the succssor of start rule
 	char start;
 	start = 'S';
 	int start_rul_num;

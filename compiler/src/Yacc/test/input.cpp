@@ -47,7 +47,7 @@ void initIdHash(void){
 	id_hash['*'] = TERM;
 	id_hash['('] = TERM;
 	id_hash[')'] = TERM;
-	id_hash[' '] = TERM;
+	id_hash['#'] = TERM;
 }
 
 Rule basic_rul[RUL_SIZ];
