@@ -147,53 +147,59 @@ Node enclosure(Rule rul){
 	//if character is not a terminal
 	Node new_nod;
 	new_nod.push_back(rul);
-	if(!rul.right[rul.point_pos].isTerm){//???BUGS: is point_pos reach to the end
-		int loop_basic_tab;
-		char next_id_nam = rul.right[rul.point_pos].id_nam;
-		Rule new_rul;
-		for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
-			//find the next rule
-			//check rule that matchs 
-			if(next_id_nam == basic_rul[loop_basic_tab].left){
-				new_rul.left = basic_rul[loop_basic_tab].left;
-				new_rul.right = basic_rul[loop_basic_tab].right;
-				new_rul.point_pos = basic_rul[loop_basic_tab].point_pos;
-				new_rul.suffix = rul.suffix;
-				//find first set 
-				if(rul.point_pos + 1 < rul.right.size()){
-					if(!rul.right[rul.point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
-						int loop;
-						/*BAD CODE: [wrong logic]:supose left values of left is unque
-						for(loop = 0; loop < RUL_SIZ; ++loop){
-							if(basic_tab[loop].left.id_nam == rul.right[point_pos].id_nam)
-								break;
-						}
-						//if no left value matched, ckeck(loop == RUL_SIZ, "invalid nonterminal"); //goto error
-						//we trust input now, and go on
-						*/
-						for(loop = 0; loop < RUL_SIZ; ++loop){
-							if(basic_rul[loop].left == rul.right[rul.point_pos].id_nam){
-								//i need chk if the suffix is in the vector already or the first of right is null
-								//chkSuf();
-								new_rul.suffix.push_back(
-									basic_rul[loop].right[0].id_nam//i supposed that the first character is terminal
-									//BUGS:rules have many conditions, just handle the easiest one.
-									//FIX:need a func to handle this findFirstCh();
-								);
+	int gen_rul_pos = 0;//the position of rule that generate next rule
+	while(gen_rul_pos != new_nod.size()){
+		//hard to read,  just look new_nod[gen_rul_pos] as rul
+		if(!new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].isTerm){//???BUGS: is point_pos reach to the end
+			int loop_basic_tab;
+			char next_id_nam = new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].id_nam;
+			Rule new_rul;
+			for(loop_basic_tab = 0; loop_basic_tab < RUL_SIZ; ++loop_basic_tab){
+				//find the next rule
+				//check rule that matchs 
+				if(next_id_nam == basic_rul[loop_basic_tab].left){
+					new_rul.left = basic_rul[loop_basic_tab].left;
+					new_rul.right = basic_rul[loop_basic_tab].right;
+					new_rul.point_pos = basic_rul[loop_basic_tab].point_pos;
+					new_rul.suffix = new_nod[gen_rul_pos].suffix;
+					//find first set 
+					if(new_nod[gen_rul_pos].point_pos + 1 < new_nod[gen_rul_pos].right.size()){
+						if(!new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
+							int loop;
+							/*BAD CODE: [wrong logic]:supose left values of left is unque
+							for(loop = 0; loop < RUL_SIZ; ++loop){
+								if(basic_tab[loop].left.id_nam == rul.right[point_pos].id_nam)
+									break;
+							}
+							//if no left value matched, ckeck(loop == RUL_SIZ, "invalid nonterminal"); //goto error
+							//we trust input now, and go on
+							*/
+							for(loop = 0; loop < RUL_SIZ; ++loop){
+								if(basic_rul[loop].left == new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].id_nam){
+									//i need chk if the suffix is in the vector already or the first of right is null
+									//chkSuf();
+									new_rul.suffix.push_back(
+										basic_rul[loop].right[0].id_nam//i supposed that the first character is terminal
+										//BUGS:rules have many conditions, just handle the easiest one.
+										//FIX:need a func to handle this findFirstCh();
+									);
+								}
 							}
 						}
+						else{
+							//i need chk if the suffix is in the vector already
+							//chkSuf();
+							new_rul.suffix.push_back(new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].id_nam);
+						}
 					}
-					else{
-						//i need chk if the suffix is in the vector already
-						//chkSuf();
-						new_rul.suffix.push_back(rul.right[rul.point_pos].id_nam);
-					}
+					//BUG:should check if this rul is in nod already
+					new_nod.push_back(new_rul);
 				}
-				//BUG:should check if this nod is in nod already
-				new_nod.push_back(new_rul);
 			}
 		}
+		++gen_rul_pos;
 	}
+	
 	return new_nod;
 }
 
@@ -242,7 +248,7 @@ int main(){
 
 	Node start_nod = enclosure(start_rul);//error here
 	int loop_nod;
-	/*
+	
 	for(loop_nod = 0; loop_nod < start_nod.size(); ++loop_nod){
 		printf("left:%c\nright:", start_nod[loop_nod].left);
 		for(loop_right = 0; loop_right < start_nod[loop_nod].right.size(); ++loop_right)
@@ -252,7 +258,7 @@ int main(){
 			printf("%c", start_nod[loop_nod].suffix[loop_suf]);
 		printf("\n");
 	}
-	*/
+	
 	que_nod.push(start_nod);
 	vec_rul.push_back(start_nod);
 	return 0;
