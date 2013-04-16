@@ -164,7 +164,7 @@ Node enclosure(Rule rul){
 					new_rul.suffix = new_nod[gen_rul_pos].suffix;
 					//find first set 
 					if(new_nod[gen_rul_pos].point_pos + 1 < new_nod[gen_rul_pos].right.size()){
-						if(!new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
+						if(!new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos + 1].isTerm){// if followed noterminal, then find the first char of rule in basic_tab
 							int loop;
 							/*BAD CODE: [wrong logic]:supose left values of left is unque
 							for(loop = 0; loop < RUL_SIZ; ++loop){
@@ -175,7 +175,7 @@ Node enclosure(Rule rul){
 							//we trust input now, and go on
 							*/
 							for(loop = 0; loop < RUL_SIZ; ++loop){
-								if(basic_rul[loop].left == new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos].id_nam){
+								if(basic_rul[loop].left == new_nod[gen_rul_pos].right[new_nod[gen_rul_pos].point_pos + 1].id_nam){
 									//i need chk if the suffix is in the vector already or the first of right is null
 									//chkSuf();
 									new_rul.suffix.push_back(
