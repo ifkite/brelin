@@ -25,10 +25,11 @@ typedef struct Identif{
 	int isTerm;
 }Identif;
 
+//right should be char*
 typedef struct Rule{
 	char left;
-	vector<Identif> right;//Identif *right;
 	int point_pos;
+	vector<Identif> right;//Identif *right;
 	vector<char> suffix;//char
 }Rule;
 
@@ -149,6 +150,7 @@ int main(){
 	int loop_basic;
 	int loop_right;
 	int loop_suf;
+	/*
 	for(loop_basic = 0; loop_basic < RUL_SIZ; ++loop_basic){
 		printf("left:%c\n", basic_rul[loop_basic].left)	;
 		printf("right:");
@@ -158,5 +160,19 @@ int main(){
 		for(loop_suf = 0; loop_suf < basic_rul[loop_basic].suffix.size(); ++loop_suf)
 			printf("%c", basic_rul[loop_basic].suffix[loop_suf]);
 	}
+	*/	
+	start_rul_num = findStart(start);//find the start rule in rule table
+	/*
+		for(loop_right = 0; loop_right < basic_rul[start_rul_num].right.size(); ++loop_right)
+			printf("%c",basic_rul[start_rul_num].right[loop_right].id_nam);
+	*/	
+	Rule start_rul; 
+	start_rul.left = basic_rul[start_rul_num].left;
+	start_rul.right = basic_rul[start_rul_num].right;
+	start_rul.point_pos = 0;		
+	start_rul.suffix.push_back('#');
+	for(loop_right = 0; loop_right < start_rul.right.size(); ++loop_right)
+		printf("%c",start_rul.right[loop_right].id_nam);
+	
 	return 0;
 }
