@@ -7,7 +7,7 @@
 #define TERM 1
 #define NTERM 0
 #define ID_END #
-#define RUL_SIZ 6
+#define RUL_SIZ 9
 
 //STL
 #include <vector>
@@ -24,21 +24,14 @@ typedef struct Identif{
 	int isTerm;
 }Identif;
 
+//right should be char*
 typedef struct Rule{
 	char left;
-	vector<Identif> right;//Identif *right;
 	int point_pos;
+	vector<Identif> right;//Identif *right;
 	vector<char> suffix;//char
 }Rule;
-//put things by code now
-//should be map
-/*
-Identif id_tab[] = {
-	{'E', NTERM}, {'H', NTERM}, {'T', NTERM}, {'M', NTERM}, {'F', NTERM},
-	{'i', TERM}, {'+', TERM}, {'*', TERM}, {'(', TERM}, {')', TERM}
-};
-*/
-//initID
+
 map<char, int> id_hash;
 void initIdHash(void){
 
@@ -53,6 +46,7 @@ void initIdHash(void){
 	id_hash['*'] = TERM;
 	id_hash['('] = TERM;
 	id_hash[')'] = TERM;
+	id_hash['#'] = TERM;
 }
 
 Rule basic_rul[RUL_SIZ];
@@ -63,7 +57,7 @@ typedef vector<Rule> Node;//node of stat graph
 queue<Node> que_nod;
 vector<Node> vec_rul;
 
-#define ID_TAB_SIZ 10
+#define ID_TAB_SIZ 11
 void getBasicRul(){
 	FILE * fp;
 	char * line = NULL;
@@ -73,22 +67,15 @@ void getBasicRul(){
 	if (fp == NULL)
 		 exit(EXIT_FAILURE);
 	
-	int init_counter = 1;
+	int line_counter;
 	Rule tmp_rul;
 	vector<Identif> tmp_right;
 	Identif tmp_id;
 	int loop_id, loop_basic_tab = 0;
+	
 	while ((read = getline(&line, &len, fp)) != -1) {
-		//initBasicRul();
-		//i can do nothing but trust input, i have no time
-		//how foolish bugs!!!!!
-		//the normal way is to check the id_tab to see whether the
-		//character we get is valid or not
-		
-		//now, we trust input ...
+		/*
 		tmp_rul.left = line[0];	
-		//ugly code!!!
-		//find character in map	
 		while(1)
 			if(line[init_counter] == '=' || line[init_counter] == '>')
 				++init_counter;
@@ -106,7 +93,39 @@ void getBasicRul(){
 			}
 		tmp_rul.point_pos = 0;	
 		basic_rul[loop_basic_tab++] = tmp_rul;
+		*/	
+		line_counter = 3;//right id begin with 3
+		tmp_rul.left = line[0];
+		while(1){
+			if(line[line_counter] == ';'){
+				break;
+			}
+			else{
+				tmp_id.id_nam = line[line_counter];
+				tmp_id.isTerm = id_hash.find(line[line_counter])->second;
+				++line_counter;
+				tmp_rul.right.push_back(tmp_id);
+			}
+		}
+		tmp_rul.point_pos = 0;
+		basic_rul[loop_basic_tab++] = tmp_rul;
+		tmp_rul.right.clear();
 	}
+	
+/*	
+	while ((read = getline(&line, &len, fp)) != -1) {
+		init_counter = 0;
+		while(1){
+			if(line[init_counter] == ';')	
+				break;
+			else{
+				printf("%c", line[init_counter]);
+				++init_counter;
+			}
+		}
+		printf("\n");
+	}
+*/
 	if (line)
 		 free(line);
 }
@@ -124,11 +143,6 @@ int findStart(char ch){
 int chkPoint(Rule rul){
 	return (rul.point_pos == rul.right.size() ? 1 : 0);
 }
-/*
-Rule initRul(Rule _rule){	
-	
-}
-*/
 Node enclosure(Rule rul){
 	//if character is not a terminal
 	Node new_nod;
@@ -228,40 +242,19 @@ int main(){
 	start_rul.suffix.push_back('#');
 
 	Node start_nod = enclosure(start_rul);//error here
+	int loop_nod;
+	/*
+	for(loop_nod = 0; loop_nod < start_nod.size(); ++loop_nod){
+		printf("left:%c\nright:", start_nod[loop_nod].left);
+		for(loop_right = 0; loop_right < start_nod[loop_nod].right.size(); ++loop_right)
+			printf("%c", start_nod[loop_nod].right[loop_right].id_nam);
+		printf("\n");
+		for(loop_suf = 0; loop_suf < start_nod[loop_nod].suffix.size(); ++loop_suf)	
+			printf("%c", start_nod[loop_nod].suffix[loop_suf]);
+		printf("\n");
+	}
+	*/
 	que_nod.push(start_nod);
 	vec_rul.push_back(start_nod);
-	/*	
-	//push start rule in the vector to make the first node
-	//Node nod_start;
-	//nod_start.push_back();
-	//push first nod in queue
-	Node head;//to store head of queue
-	int loop_vec;
-	Rule tmp_start_rul;
-	Node tmp_nod;
-	while(!que_nod.empty()){	
-		//for all rules in head of queue, that all pointers reach the end
-		head = que_nod.front();
-		//chk if point reach end
-		for(loop_vec = 0; loop_vec < head.size(); ++loop_vec){
-			if(!chkPoint(head[loop_vec])){//if return true, then pop front of queue and give a integer value to this stat of rule and mark down
-				//genRul(head[loop_vec]);
-				//generate a rule
-				tmp_start_rul = {
-					tmp_start_rul.left = head[loop_vec].left, 
-					tmp_start_rul.right = head[loop_vec].right,
-					tmp_start_rul.point_pos = ++head[loop_vec].point_pos,
-					tmp_start_rul.suffix = head[loop_vec].suffix
-				};
-				if(!isVisit(tmp_start_rul)){
-					tmp_nod = enclosure(tmp_start_rul);
-					que_nod.push(tmp_nod);
-					vec_rul.push_back(tmp_nod);
-					que_nod.pop();
-				}
-			}
-		}
-	}
-	*/	
 	return 0;
 }
