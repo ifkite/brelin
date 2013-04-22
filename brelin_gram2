@@ -8,6 +8,8 @@ Type_specifer
 int
 char
 Identity
+array
+;
 
 [start]
 
@@ -18,8 +20,8 @@ Identity
 Declaration_list  Declaration_list  Declaration
 Declaration_list Declaration
 Declaration Var_declaration
-Var_declaration Type_specifer ( Identity )
-Var_declaration Type_specifer ( Identity )
-Var_declaration Type_specifer ( Identity )
+Var_declaration Type_specifer ( Identity ) ;
+Var_declaration array (Type_specifer Identity ) ;
 Type_specifer int
 Type_specifer char
+
