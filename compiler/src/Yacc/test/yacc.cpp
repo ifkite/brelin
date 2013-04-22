@@ -225,7 +225,6 @@ int isVisit(Rule rul){
 
 int main(){
 	//initlize
-	/*old code
 	char start;
 	start = 'S';
 	int start_rul_num;
@@ -251,23 +250,10 @@ int main(){
 		start_rul.point_pos = 0
 	};
 	start_rul.suffix.push_back('ID_END');//setSufix(start_rul, "ID_END");	
-	old code*/
-
+	
 	//check(0, "checked getBasicRul");
 	//set the succssor of start rule
-	char start;
-	start = 'S';
-	int start_rul_num;
-	initIdHash();
-	getBasicRul();
-	int loop_basic;
-	int loop_right;
-	int loop_suf;
-	start_rul_num = findStart(start);//find the start rule in rule table
-	Rule start_rul = {
-	};
-
-	Node start_nod = enclosure();//error here
+	Node start_nod = enclosure(start_rul);//error here
 	que_nod.push(start_nod);
 	vec_rul.push_back(start_nod);
 	//push start rule in the vector to make the first node

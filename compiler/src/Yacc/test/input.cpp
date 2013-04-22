@@ -150,7 +150,7 @@ int main(){
 	int loop_basic;
 	int loop_right;
 	int loop_suf;
-	/*
+	
 	for(loop_basic = 0; loop_basic < RUL_SIZ; ++loop_basic){
 		printf("left:%c\n", basic_rul[loop_basic].left)	;
 		printf("right:");
@@ -160,7 +160,7 @@ int main(){
 		for(loop_suf = 0; loop_suf < basic_rul[loop_basic].suffix.size(); ++loop_suf)
 			printf("%c", basic_rul[loop_basic].suffix[loop_suf]);
 	}
-	*/	
+		
 	start_rul_num = findStart(start);//find the start rule in rule table
 	/*
 		for(loop_right = 0; loop_right < basic_rul[start_rul_num].right.size(); ++loop_right)
