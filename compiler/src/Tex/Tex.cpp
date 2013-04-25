@@ -1,6 +1,7 @@
 #include "Tex.h"
 #include<stack>
 #include<stdio.h>
+#include<stdlib.h>
 using std::stack;
 /*
 void init_input(int *buf, const int size){
@@ -34,9 +35,21 @@ int main(){
 			//handle = searchActTab();
 			handle = act_tab[stk_stat.top()][buf];
 			//extract action and state num , which are stored in table
+			/*
 			action = handle & EXTR_ACT; 
 			stat = handle & EXTR_NUM;
-
+			*/
+			//in a common way
+			if(handle > 0){
+				if(handle == ACCPT)
+					action = ACCPT;
+				else
+					action = SHIFT;
+			}
+			else{
+				action = REDUC;
+			}
+			stat = abs(handle);
 			switch(action){
 				case SHIFT:	{
 					//only SHIFT action can modify buf and the move the pointer, the pointer points to ele next to buf
