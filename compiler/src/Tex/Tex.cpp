@@ -39,6 +39,7 @@ int main(){
 			action = handle & EXTR_ACT; 
 			stat = handle & EXTR_NUM;
 			*/
+
 			//in a common way
 			if(handle > 0){
 				if(handle == ACCPT)
@@ -46,9 +47,13 @@ int main(){
 				else
 					action = SHIFT;
 			}
-			else{
+			else if(handle < 0){
 				action = REDUC;
 			}
+			else
+				action = ERRTX;
+			//common way
+
 			stat = abs(handle);
 			switch(action){
 				case SHIFT:	{
