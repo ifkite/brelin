@@ -7,6 +7,7 @@ using std::stack;
 //need to be modified
 //read action tab and goto tab from file
 //modify act_tab in this func
+//l
 static int readTab(){
 	FILE* file;
 	file = fopen(tab_path , "r");
@@ -25,21 +26,11 @@ static int readTab(){
 				++loop_j;
 			}
 		}
-
-		//debug cod
-		int loop_col, loop_row;
-		for(loop_col = 0; loop_col < loop_j; ++loop_col){
-			for(loop_row = 0; loop_row < ID_SIZ; ++loop_row)
-				printf("%d\t", act_tab[loop_col][loop_row]);
-			printf("\n");
-		}
-		//debug cod
-		
 	}
 	fclose(file);
 	return 0;
 }
-
+//c
 const int BUF_SIZ = 128;
 //int input_buf[BUF_SIZ] = {L_BR, ID , ADD, ID, R_BR, MUT, ID, SPC, END};
 int main(){
@@ -128,6 +119,7 @@ int main(){
 					flag = 0;
 					break;
 				}
+				//l
 				 default: {
 					//error
 					fprintf(stderr, "syntax error eccored\n");
@@ -135,6 +127,7 @@ int main(){
 					flag = 0;
 					break;
 				}	
+				//c
 			}
 		}	
 	}
