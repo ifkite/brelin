@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 //#define MAX_ROW 64 
 //#define MAX_COLUMN 1024
 #define ROW 50
