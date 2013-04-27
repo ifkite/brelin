@@ -7,7 +7,7 @@ using std::stack;
 //need to be modified
 //read action tab and goto tab from file
 //modify act_tab in this func
-//l
+//l readTab()
 static int readTab(){
 	FILE* file;
 	file = fopen(tab_path , "r");
@@ -32,10 +32,9 @@ static int readTab(){
 }
 //c
 const int BUF_SIZ = 128;
-//int input_buf[BUF_SIZ] = {L_BR, ID , ADD, ID, R_BR, MUT, ID, SPC, END};
+int input_buf[BUF_SIZ] = {3, 4, 5, 11,0 , 2, 8, 12, 29};
 int main(){
 	readTab();
-	/*
 	int buf;
 	stack<int> stk_stat;
 	stack<int> stk_input;
@@ -50,10 +49,6 @@ int main(){
 		int flag = 1;
 		while(flag){
  		
-			//readBuf();//read buffer
-			//readStat();//read state in stack
-			//stk_stat.top()	
-
 			//when get the value of state and buffer, we can search table
 			//handle = searchActTab();
 			handle = act_tab[stk_stat.top()][buf];
@@ -61,7 +56,6 @@ int main(){
 			
 			//action = handle & EXTR_ACT; 
 			//stat = handle & EXTR_NUM;
-			
 
 			//in a common way
 			if(handle > 0){
@@ -80,6 +74,7 @@ int main(){
 			stat = abs(handle);
 			switch(action){
 				case SHIFT:	{
+					printf("shift\n");
 					//only SHIFT action can modify buf and the move the pointer, the pointer points to ele next to buf
 
 					//push buf in stk_input, and input_buf[next] copy to buf, move next , ATTENTION:   MAYBE BUGS HERE!!!!
@@ -114,12 +109,14 @@ int main(){
 					stk_stat.push(next_stat);
 					break;
 				}
+				//l case Accept
 				case ACCPT: {
 					printf("Accept!\n");
 					flag = 0;
 					break;
 				}
-				//l
+				//c
+				//l case default
 				 default: {
 					//error
 					fprintf(stderr, "syntax error eccored\n");
@@ -131,6 +128,5 @@ int main(){
 			}
 		}	
 	}
-	*/
 	return 0;
 }
