@@ -1,0 +1,98 @@
+[nonterminal]
+Compound_stat
+Declaration_list
+Statement_list
+Statement
+Expression_stmt
+If_stmt
+While_stmt
+Expression
+Declaration
+Var_declaration
+Type_specifer
+Var
+Simple_expression
+Additive_expression
+Relop
+Addop
+Term
+Mulop
+Factor
+
+[terminal]
+int
+char
+Identity
+main
+(
+)
+[
+]
+;
+if
+else
+{
+}
+and
+or
+not
+<=
+<
+==
+>
+>=
+!=
+
+[start]
+Program
+
+[production]
+
+/*declaration*/
+
+Program main ( ) Compound_stat
+Compound_stmt {Declaration_list Statement_list}
+Declaration_list  Declaration_list  Declaration
+Declaration_list Declaration
+Declaration Var_declaration
+Var_declaration Type_specifer Identity ;
+Var_declaration Type_specifer Identity [ ] ;
+Type_specifer int
+Type_specifer char
+Statement_list Statement_list Statement
+Statement_list Statement
+Statement Expression_stmt
+Statement If_stmt
+Statement While_stmt
+Expression_stmt Expression ;
+Expression_stmt ;
+if_stmt if ( Expression ) { Statement }
+if_stmt if ( Expression ) { Statement } else { Statement }
+While_stmt while ( Expression ) { Statement }
+
+Expression Var = Expression
+Expression Simple_expression
+Expression Simple_expression and Simple_expression
+Expression Simple_expression or Simple_expression
+Expression not Simple_expression 
+Var Identity
+Var Identity [ Expression ]
+Simple_expression Additive_expression Relop Additive_expression
+Simple_expression Additive_expression
+Relop <=
+Relop <
+Relop ==
+Relop >
+Relop >=
+Relop !=
+Additive_expression Additive_expression Addop Term
+Additive_expression Term
+Addop +
+Addop -
+Term Term Mulop Factor
+Term Factor
+Mulop *
+Mulop /
+Mulop %
+Factor ( Expression )
+Factor Var

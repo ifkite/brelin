@@ -1,0 +1,74 @@
+/*declaration basic*/
+Program Declaration_list
+Declaration_list  Declaration_list  Declaration
+Declaration_list Declaration
+Declaration Var_declaration
+Declaration Fun_declaration
+Var_declaration  Type_specifer $ ;
+Var_declaration  Type_specifer $ [ ] ;
+Type_specifer int
+Type_specifer void
+Type_specifer char
+Type_specifer bool
+Type_specifer string
+Type_specifer real
+/*declaration basic*/
+Fun_declaration Type_specifer $ ( Params ) ;
+Fun_declaration int main ( ) Compound_stmt 
+Fun_declaration Type_specifer $ ( Params ) Compound_stmt
+Params Param_list
+Params @
+Param_list Param_list , Param
+Param_list Param
+Param Type_specifer $
+Param Type_specifer $ [ ]
+Compound_stmt { Local_declarations Statement_list }
+Local_declarations Local_declarations Var_declaration
+Local_declarations @
+Statement_list Statement_list Statement
+Statement_list @
+Statement Expression_stmt
+Statement Compound_stmt
+Statement If_stmt
+Statement While_stmt
+Statement Return_stmt
+Expression_stmt Expression ;
+Expression_stmt ;
+If_stmt if ( Expression ) { Statement }
+If_stmt if ( Expression ) { Statement } else  { Statement }
+While_stmt while ( Expression ) { Statement }
+Return_stmt return ; 
+Return_stmt return Expression ;
+Expression Var = Expression
+Expression Simple_expression
+Expression Simple_expression && Simple_expression
+Expression Simple_expression || Simple_expression
+Expression ! Simple_expression 
+Var $ 
+Var $ [ Expression ]
+Simple_expression Additive_expression Relop Additive_expression
+Simple_expression Additive_expression
+Relop <=
+Relop <
+Relop >
+Relop >=
+Relop ==
+Relop !=
+Additive_expression Additive_expression Addop Term
+Additive_expression Term
+Addop +
+Addop -
+Term Term Mulop Factor
+Term Factor
+Mulop *
+Mulop /
+Mulop %
+Factor ( Expression ) 
+Factor Var
+Factor Call
+Factor $
+Call $ ( Args )
+Args Args_list 
+Args @
+Args_list Args_list , Expression
+Args_list Expression
