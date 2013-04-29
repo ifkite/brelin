@@ -32,7 +32,7 @@ static int readTab(){
 }
 //c
 const int BUF_SIZ = 128;
-int input_buf[BUF_SIZ] = {3, 4, 5, 11,0 , 2, 8, 12, 29};
+int input_buf[BUF_SIZ] = {0, 1, 2, 3, 6, 5, 19, 7, 5, 19, 5, 14, 15,19, 16, 1,5, 14, 15, 2, 3, 5, 14, 15, 19,4, 4, 20 };
 int main(){
 	readTab();
 	int buf;
@@ -44,7 +44,7 @@ int main(){
 	int action;
 	int stat;
 		
-	if(buf){
+	if(buf != -1){
 		int next = 1;//next points to the one next to buf
 		int flag = 1;
 		while(flag){

@@ -8,54 +8,43 @@ typedef struct Rule{
 }Rule;
 
 //rule table
-#define RUL_SIZ 45
+#define RUL_SIZ 35
 const Rule rul_tab[RUL_SIZ] = {
-
-	{"Program => main ( ) Compound_stmt ", 30, 4 },
-	{"Compound_stmt => { Declaration_list Statement_list }  " , 31, 4},
-	{"Declaration_list =>  Declaration_list  Declaration " , 32, 2},
-	{"Declaration_list => Declaration " , 32, 1},
-	{"Declaration => Var_declaration " , 39, 1},
-	{"Var_declaration => Type_specifer Identity # " , 40, 3},
-	{"Var_declaration =>  Type_specifer Identity [ ] # " , 40, 5},
-	{"Type_specifer => int " , 41, 1},
-	{"Type_specifer => char " , 41, 1},
-	{"Statement_list => Statement_list Statement " , 33, 1},
-	{"Statement_list => Statement " , 33, 1},
-	{"Statement => Expression_stmt " , 34, 1},
-	{"Statement => If_stmt " , 34, 1},
-	{"Statement => While_stmt " , 34, 1},
-	{"Expression_stmt => Expression # ", 35, 2},
-	{"Expression_stmt => # ", 35, 1},
-	{"If_stmt => if ( Expression ) { Statement } ", 36, 7 },
-	{"If_stmt => if ( Expression ) { Statement } else { Statement } ", 36, 11},
-	{"While_stmt => while ( Expression ) { Statement } ", 37, 7},
-	{"Expression => Var = Expression ", 38, 3},
-	{"Expression => Simple_expression ", 38, 1},
-	{"Expression => Simple_expression and Simple_expression ", 38, 3},
-	{"Expression => Simple_expression or Simple_expression ", 38, 3},
-	{"Expression => not Simple_expression  ", 38, 2},
-	{"Var => Identity ", 42, 1},
-	{"Var => Identity [ Expression ] ", 42, 4},
-	{"Simple_expression => Additive_expression Relop Additive_expression ", 43, 3 },
-	{"Simple_expression => Additive_expression ", 43, 1},
-	{"Relop => <= ", 45, 1},
-	{"Relop => < ", 45, 1},
-	{"Relop => == ", 45, 1},
-	{"Relop => > ", 45, 1},
-	{"Relop => >= ", 45, 1},
-	{"Relop => != ", 45, 1},
-	{"Additive_expression => Additive_expression Addop Term ", 44, 3},
-	{"Additive_expression  => Term ", 44, 1},
-	{"Addop => + ", 46, 1},
-	{"Addop => - ", 46, 1},
-	{"Term => Term Mulop Factor ", 47, 3},
-	{"Term => Factor ", 47, 1},
-	{"Mulop => * ", 48, 1},
-	{"Mulop => / ", 48, 1},
-	{"Mulop => % ", 48, 1},
-	{"Factor => ( Expression ) ", 49, 3},
-	{"Factor=> Var ", 49, 1}
+{"" , 0 , 0},
+{"G => Program  " , 0 , 0 },
+{"Program => main ( ) Compound_stmt  " , 21 , 4},
+{"Compound_stmt => { Local_declarations Statement_list }  " , 22 , 4},
+{"Local_declarations => Local_declarations Var_declaration " , 23 , 2},
+{"Local_declarations => Var_declaration  " , 23 , 1},
+{"Var_declaration => Type_specifer identity $ " , 26, 3},
+{"Type_specifer => int " , 27 , 1},
+{"Type_specifer => char " , 27 , 1},
+{"Type_specifer => void " , 27 , 1},
+{"Statement_list => Statement_list Statement  " , 24 , 2},
+{"Statement_list => Statement " , 24 , 1},
+{"Statement => Expression_stmt " , 25 , 1},
+{"Expression_stmt => Expression $ " , 28 , 2},
+{"Expression => Var = Expression " , 29 , 3},
+{"Expression => Simple_expression " , 29 , 1},
+{"Simple_expression => Additive_expression " , 31 , 1},
+{"Additive_expression => Additive_expression Addop Term " , 32 , 3},
+{"Additive_expression => Term " , 32 , 1},
+{"Addop => + " , 33 , 1},
+{"Addop => - " , 33 , 1},
+{"Term => Term Mulop Factor " , 34 , 3},
+{"Term => Factor " , 34 , 1},
+{"Mulop => * " , 35 , 1},
+{"Mulop => / " , 35 , 1},
+{"Mulop => % " , 35 , 1},
+{"Factor => ( Expression ) " , 36 , 3},
+{"Factor => Var " , 36 , 1},
+{"Factor => num " , 36 , 1},
+{"Var => identity " , 30 , 1},
+{"Statement => If_stmt " , 25 , 1},
+{"If_stmt => if ( Expression ) { Statement } " , 37 , 7},
+{"If_stmt => if ( Expression ) { Statement } else { Statement } " , 37 , 11},
+{"Statement => While_stmt " , 25 , 1},
+{"While_stmt => while ( Expression ) { Statement } " , 38 , 7}
 };
 
 #define SHIFT 0x1000
@@ -63,9 +52,9 @@ const Rule rul_tab[RUL_SIZ] = {
 #define ACCPT 0x4000
 #define ERRTX 0x0000
 //need modify
-const int STAT_SIZ = 310;
-const int ID_SIZ = 50;
-const char *tab_path = "./tab_first.txt\0";
+const int STAT_SIZ = 68;
+const int ID_SIZ = 39;
+const char *tab_path = "./gram_matrix.txt\0";
 
 int act_tab[STAT_SIZ][ID_SIZ];
 
