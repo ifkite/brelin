@@ -1,75 +1,35 @@
-[nonterminal]
-Program
-Compound_stmt
-Local_declarations
-Statement_list
-Statement
-Var_declaration
-Type_specifer
-Expression_stmt
-Expression
-Var
-Simple_expression
-Additive_expression
-Addop
-Term
-Mulop
-Factor
-If_stmt
-While_stmt
-[terminal]
-main
-(
-)
-{
-}
-identity
-int
-char
-void
-+
--
-*
-/
-%
-=
-num
-if
-else
-while
-$
-[start]
-G => Program  ;
-Program => main ( ) Compound_stmt  ;
-Compound_stmt => { Local_declarations Statement_list }  ;
-Local_declarations => Local_declarations Var_declaration ;
-Local_declarations => Var_declaration  ;
-Var_declaration => Type_specifer identity $ ;
-Type_specifer => int ;
-Type_specifer => char ;
-Type_specifer => void ;
-Statement_list => Statement_list Statement  ;
-Statement_list => Statement ;
-Statement => Expression_stmt ;
-Expression_stmt => Expression $ ;
-Expression => Var = Expression ;
-Expression => Simple_expression ;
-Simple_expression => Additive_expression ;
-Additive_expression => Additive_expression Addop Term ;
-Additive_expression => Term ;
-Addop => + ;
-Addop => - ;
-Term => Term Mulop Factor ;
-Term => Factor ;
-Mulop => * ;
-Mulop => / ;
-Mulop => % ;
-Factor => ( Expression ) ;
-Factor => Var ;
-Factor => num ;
-Var => identity ;
-Statement => If_stmt ;
-If_stmt => if ( Expression ) { Statement } ;
-If_stmt => if ( Expression ) { Statement } else { Statement } ;
-Statement => While_stmt ;
-While_stmt => while ( Expression ) { Statement } ;
+"" , 0 , 0
+"G => Program  " , 0 , 0
+"Program => main ( ) Compound_stmt  " , 21
+"Compound_stmt => { Local_declarations Statement_list }  " , 22
+"Local_declarations => Local_declarations Var_declaration " , 23
+"Local_declarations => Var_declaration  " , 23
+"Var_declaration => Type_specifer identity $ " , 26, 
+"Type_specifer => int " , 27
+"Type_specifer => char " , 27
+"Type_specifer => void " , 27
+"Statement_list => Statement_list Statement  " , 24
+"Statement_list => Statement " , 24
+"Statement => Expression_stmt " , 25
+"Expression_stmt => Expression $ " , 28
+"Expression => Var = Expression " , 29
+"Expression => Simple_expression " , 29
+"Simple_expression => Additive_expression " , 31
+"Additive_expression => Additive_expression Addop Term " , 32
+"Additive_expression => Term " , 32
+"Addop => + " , 33
+"Addop => - " , 33
+"Term => Term Mulop Factor " , 34
+"Term => Factor " , 34
+"Mulop => * " , 35
+"Mulop => / " , 35
+"Mulop => % " , 35
+"Factor => ( Expression ) " , 36
+"Factor => Var " , 36
+"Factor => num " , 36
+"Var => identity " , 30
+"Statement => If_stmt " , 25
+"If_stmt => if ( Expression ) { Statement } " , 37
+"If_stmt => if ( Expression ) { Statement } else { Statement } " , 37
+"Statement => While_stmt " , 25
+"While_stmt => while ( Expression ) { Statement } " , 38
