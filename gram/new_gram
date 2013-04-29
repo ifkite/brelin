@@ -1,3 +1,48 @@
-G -> Program ;
-Program -> main ( ) Compound_stmt ;
-Compound_stmt -> { Local_declarations Statement_list}
+//define basic program structure
+G -> Program 
+Program -> main ( ) Compound_stmt 
+Compound_stmt -> { Local_declarations Statement_list} 
+
+//it said that the program must have one Var_declaration at least
+Local_declarations -> Local_declarations Var_declaration
+Local_declarations -> Var_declaration 
+//a basic version, array missed
+Var_declaration -> Type_specifer identity $
+Type_specifer -> int
+Type_specifer -> char
+Type_specifer -> void
+
+Statement_list -> Statement_list Statement 
+Statement_list -> Statement
+Statement -> Expression_stmt
+
+//inply that at least one Expression_stmt should exist
+Expression_stmt -> Expression $
+Expression -> Var = Expression
+Expression -> Simple_expression
+
+//
+
+Simple_expression -> Additive_expression
+
+Additive_expression -> Additive_expression Addop Term
+Additive_expression -> Term
+Addop -> +
+Addop -> -
+Term -> Term Mulop Factor
+Term -> Factor
+Mulop -> *
+Mulop -> /
+Mulop -> %
+Factor -> ( Expression )
+Factor -> Var
+Factor -> Num
+//array missed
+Var -> identity
+
+Statement -> If_stmt
+If_stmt -> if ( Expression ) { Statement }
+If_stmt -> if ( Expression ) { Statement } else { Statement }
+
+Statement -> While_stmt
+While_stmt -> While ( Expression ) { Statement }
