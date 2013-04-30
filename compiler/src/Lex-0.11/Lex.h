@@ -147,18 +147,20 @@ const struct Func2num func_tab[] = {
 struct Key2id{
 	char *key;
 	int key_id;
+	int tex_num;//for tex analyze
 };
+//-1 for defalt, 
 const struct Key2id key_tab[] = {
-	{"void", K_VOID},
-	{"char", K_CHAR},
-	{"int", K_INT},
-	{"if", K_IF},
-	{"else", K_ELS},
-	{"ret", K_RET},
-	{"while", K_WHILE},
-	{"cntu", K_CNTU},
-	{"brk", K_BRK},
-	{"main", K_MAIN}
+	{"void", K_VOID, 8},
+	{"char", K_CHAR, 7},
+	{"int", K_INT, 6},
+	{"if", K_IF, 16},
+	{"else", K_ELS, 17},
+	{"ret", K_RET, -1},
+	{"while", K_WHILE, 18},
+	{"cntu", K_CNTU, -1},
+	{"brk", K_BRK, -1},
+	{"main", K_MAIN, 0}
 };
 int iskeyword(char *str){//if str is a key word , return its map value,
 						//els return 0

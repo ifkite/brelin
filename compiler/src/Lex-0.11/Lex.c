@@ -62,7 +62,8 @@ void hnd_let(void){
 
 		que_sym.push({key_tab[hnd_id - BASE].key_id,key_tab[hnd_id - BASE].key});//seems that key character need not be passed 
 
-		printf("%s, %d\n", key_tab[hnd_id - BASE].key, key_tab[hnd_id - BASE].key_id);
+		//printf("%s, %d\n", key_tab[hnd_id - BASE].key, key_tab[hnd_id - BASE].key_id);
+		printf("%d\t", key_tab[hnd_id - BASE].tex_num);
 	}
 	else{
 
