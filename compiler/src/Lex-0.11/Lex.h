@@ -21,7 +21,7 @@
 #define NOT   17   //
 #define QUO   18   //"
 #define ADR   19   //& get address
-#define ID_WRD 20  
+#define ID_WRD 20  //identity
 #define KWD    21
 #define ID_SIZ 64
 
@@ -32,10 +32,14 @@
 #define K_IF   103
 #define K_ELS  104
 #define K_RET  105
-#define K_FOR  106
+#define K_WHILE  106
 #define K_CNTU 107
 #define K_BRK  108
-#define K_SIZ  9 //num of key word
+
+//new for Tex
+#define K_MAIN 109
+
+#define K_SIZ  10 //num of key word
 
 #define SIZ   16//func_tab size
 #include<ctype.h>
@@ -53,7 +57,7 @@ struct Func2num{
 	handle hnd;//this is a patch
 };
 
-
+//l
 int issem(int hnd_ch){
 	return (hnd_ch == ';' ? 1 : 0);//if hnd_ch is ';' then return 1
 }
@@ -103,6 +107,7 @@ int isadr(int hnd_ch){
 int isnline(int hnd_ch){
 	return (hnd_ch == '\n' ? 1 : 0);
 }
+//c
 void hnd_spc(void);
 void hnd_sem(void);
 void hnd_lbr_f(void);
@@ -144,15 +149,16 @@ struct Key2id{
 	int key_id;
 };
 const struct Key2id key_tab[] = {
-	{"k_void", K_VOID},
-	{"k_char", K_CHAR},
-	{"k_int", K_INT},
-	{"k_if", K_IF},
-	{"k_els", K_ELS},
-	{"k_ret", K_RET},
-	{"k_for", K_FOR},
-	{"k_cntu", K_CNTU},
-	{"k_brk", K_BRK}
+	{"void", K_VOID},
+	{"char", K_CHAR},
+	{"int", K_INT},
+	{"if", K_IF},
+	{"else", K_ELS},
+	{"ret", K_RET},
+	{"while", K_WHILE},
+	{"cntu", K_CNTU},
+	{"brk", K_BRK},
+	{"main", K_MAIN}
 };
 int iskeyword(char *str){//if str is a key word , return its map value,
 						//els return 0
