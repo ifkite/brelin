@@ -121,6 +121,7 @@ void hnd_rbr_a(void);
 void hnd_assin(void);
 void hnd_add(void);
 void hnd_min(void);
+void hnd_mut(void);
 void hnd_div(void);
 void hnd_quo(void);
 void hnd_adr(void);
@@ -139,6 +140,7 @@ const struct Func2num func_tab[] = {
 	{isassin, ASSIN, hnd_assin},
 	{isadd, ADD, hnd_add},
 	{ismin, MIN, hnd_min},
+	{ismut, MUT, hnd_mut},
 	{isdiv, DIV, hnd_div},
 	{isquo, QUO, hnd_quo},
 	{isadr, ADR, hnd_adr}

@@ -39,7 +39,7 @@ void hnd_rblk(void){
 	ch = fgetc(fd);//handle next
 }
 void hnd_let(void){
-	printf("letter dected\n");
+	//printf("letter dected\n");
 	char id_ch[ID_SIZ] = {'\0'};
 	id_ch[0] = ch;//copy the first letter in the id
 	int loop;
@@ -182,7 +182,7 @@ int main(int argc, char **argv){
 				}
 			}
 		}
-		printf("find eof\n");
+		//printf("find eof\n");
 	}
 	fclose(fd);
 	//parse
