@@ -2,7 +2,7 @@
 void hnd_spc(void){
 	//ch = fgetc(fd);//handle spc the first time
 	que_sym.push({SPC, NULL});
-	printf("white sp\n");
+	//printf("white sp\n");
 	while(isspace(ch = fgetc(fd)));
 	//if hnd_ch is not a spc, then return, in which
 	//it still retain a un spc char
@@ -10,27 +10,32 @@ void hnd_spc(void){
 }
 void hnd_sem(void){
 	que_sym.push({SEM,NULL});
-	printf("; dected\n");
+	//printf("; dected\n");
+	printf("19\t");
 	ch = fgetc(fd);//handle next
 }
 void hnd_lbr_f(void){
 	que_sym.push({LBR_F,NULL});
-	printf("( dected\n");
+	//printf("( dected\n");
+	printf("1\t");
 	ch = fgetc(fd);//handle next
 }
 void hnd_rbr_f(void){
 	que_sym.push({RBR_F,NULL});
-	printf(") dected\n");
+	//printf(") dected\n");
+	printf("2\t");
 	ch = fgetc(fd);//handle next
 }
 void hnd_lblk(void){
 	que_sym.push({LBLK,NULL});
-	printf("{ dected\n");
+	//printf("{ dected\n");
+	printf("3\t");
 	ch = fgetc(fd);//handle next 
 }
 void hnd_rblk(void){
 	que_sym.push({RBLK,NULL});
-	printf("} dected\n");
+	//printf("} dected\n");
+	printf("4\t");
 	ch = fgetc(fd);//handle next
 }
 void hnd_let(void){
@@ -63,7 +68,8 @@ void hnd_let(void){
 
 		que_sym.push({ID_WRD,id_ch });
 
-		printf("%s,%d\n", id_ch, ID_WRD);
+		//printf("%s,%d\n", id_ch, ID_WRD);
+		printf("5\t");
 	}
 	
 }
@@ -82,16 +88,17 @@ void hnd_dig(void){
 			break;
 	}
 	que_sym.push({DIG, dig_ch});
-	printf("%s\n", dig_ch);
+	//printf("%s\n", dig_ch);
+	printf("15\t");
 }
 void hnd_lbr_a(void){
 	que_sym.push({LBR_A, NULL});
-	printf("[ dected\n");
+	//printf("[ dected\n");
 	ch = fgetc(fd);
 }
 void hnd_rbr_a(void){
 	que_sym.push({RBR_A, NULL});
-	printf("] dected\n");
+	//printf("] dected\n");
 	ch = fgetc(fd);
 }
 void hnd_assin(void){
@@ -102,26 +109,30 @@ void hnd_assin(void){
 		hnd_ch[1] = '=';//seem no useful now
 		ch = fgetc(fd);
 		que_sym.push({EQU, NULL});
-		printf("== dected\n");
+		//printf("== dected\n");
 	}
 	else{
 		que_sym.push({ASSIN, NULL});
-		printf("= dected\n");
+		//printf("= dected\n");
+		printf("14\t");
 	}
 }
 void hnd_add(void){
 	que_sym.push({ADD, NULL});
-	printf("+ dected\n");
+	//printf("+ dected\n");
+	printf("9\t");
 	ch = fgetc(fd);
 }
 void hnd_min(void){
 	que_sym.push({MIN, NULL});
-	printf("- dected\n");
+	//printf("- dected\n");
+	printf("10\t");
 	ch = fgetc(fd);
 }
 void hnd_mut(void){
 	que_sym.push({MUT, NULL});
-	printf("* dected\n");
+	//printf("* dected\n");
+	printf("11\t");
 	ch = fgetc(fd);
 }
 void hnd_div(void){
@@ -132,23 +143,24 @@ void hnd_div(void){
 		hnd_ch[1] = '/';//seem no useful now
 		ch = fgetc(fd);
 		que_sym.push({NOT, NULL});
-		printf("// dected\n");
+		//printf("// dected\n");
 		while(!isnline(ch=fgetc(fd)));//if ch is not a newline , loop
 		ch = fgetc(fd);//deal with the new line
 	}
 	else{
 		que_sym.push({DIV, NULL});
-		printf("/ dected\n");
+		//printf("/ dected\n");
+		printf("12\t");
 	}
 }
 void hnd_quo(void){
 	que_sym.push({QUO, NULL});
-	printf("\" dected\n");
+	//printf("\" dected\n");
 	ch = fgetc(fd);
 }
 void hnd_adr(void){
 	que_sym.push({ADR, NULL});
-	printf("& dected \n");
+	//printf("& dected \n");
 	ch = fgetc(fd);
 }
 
