@@ -33,8 +33,7 @@ static int joy_probe (struct usb_interface *interface, const struct usb_device_i
 	init_completion(&dev->bulk_in_completion);
 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
 	dev->interface = interface;
-	iface_desc = interface->cur_altsetting;
-	
+	iface_desc = interface->cur_altsetting;	
 }
 
 static void joy_delete(struct kref *kref){
