@@ -1,3 +1,11 @@
+#include<linux/kernel.h>
+#include<linux/errno.h>
+#include<linux/init.h>
+#include<linux/slab.h>
+#include<linux/module.h>
+#include<linux/kref.h>
+#include<linux/uaccess.h>
+#include<linux/mutex.h>
 //need crtl endpoint, to get info from devive, get dev status, send cmd to dev
 //intertupt endpoint, transform small data
 #define USB_JOY_VENDOR_ID 0x8380
