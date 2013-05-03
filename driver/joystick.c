@@ -14,16 +14,18 @@ static struct usb_device_id joy_table[] = {
 	{ USB_DEVICE(USB_JOY_VENDOR_ID, USB_JOY_PRODUCT_ID)},
 	{ }
 }
+
 MODULE_DEVICE_TABLE(usb, joy_table);
 //usb_interface
 //usb_device *id
 struct joy_dev {
-	
 };
+
 static int joy_probe (struct usb_interface *interface, const struct usb_device_id *id){
 	printk("joy_probe called\n");
 	struct joy_dev *dev;
 	struct usb_host_interface *iface_desc;
+	struct usb_endpoint_descriptor *endpoint;
 	size_t buffer_size;
 	int i;
 	int retval = -ENOMEM;
@@ -42,6 +44,94 @@ static int joy_probe (struct usb_interface *interface, const struct usb_device_i
 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
 	dev->interface = interface;
 	iface_desc = interface->cur_altsetting;	
+	//deal with all endpoints
+	for(i = 0; i < iface_desc->desc.bNumEndpoints; ++i){/*{{{*/
+		endpoint = &iface_desc->endpoint[i].desc;
+		printk("endpoint %d:\n",i);
+		if(!endpoint)
+			return -ENODEV;
+		printk("direction(%02X): ", endpoint->bEndpointAddress);
+		if(endpoint->bEndpointAddress & USB_DIR_IN)
+			printk("to host\n");
+		else
+			printk("to device\n");
+		printk("Endpoint type: ");
+		//judge the attr of endpoints
+		switch(endpoint->bmAttributes){
+			case 0:{
+				printk("control\n");
+				//need some code
+				goto error;
+				//break;
+			}
+			case 1:{
+				printk("ISOC\n");
+				//need some code
+				goto error;
+				//break;
+			}/
+			//deal with bulk endpoints
+			case 2:{
+				printk("bulk\n");
+				if (!dev->bulk_in_endpointAddr &&
+				usb_endpoint_is_bulk_in(endpoint)) {
+					/*found a bulk in endpoint */
+					buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+					dev->bulk_in_size = buffer_size;
+					dev->bulk_in_endpointAddr = endpoint->bEndpointAddress;
+					dev->bulk_in_buffer = kmalloc(buffer_size, GFP_KERNEL);
+					if (!dev->bulk_in_buffer) {
+						err("Could not allocate bulk_in_buffer");
+						goto error;
+					}
+					dev->bulk_in_urb = usb_alloc_urb(0, GFP_KERNEL);
+					if (!dev->bulk_in_urb) {
+						err("Could not allocate bulk_in_urb");
+						goto error;
+					}
+				}	
+
+				if (!dev->bulk_out_endpointAddr &&
+					usb_endpoint_is_bulk_out(endpoint)) {
+					/* we found a bulk out endpoint */
+					dev->bulk_out_endpointAddr = endpoint->bEndpointAddress;
+				}
+				break;
+			}
+			case 3:{
+				printk("intterupt\n");//hopefully this
+				goto error;
+				//break;
+			}
+			default:
+				printk("Unkown.\n");
+				goto error;
+		}
+		printk("\n");
+	}/*}}}*/
+	//if endpoint is bulk
+	//save data to interface
+	usb_set_intfdata(interface, dev);
+	//regist the device
+	retval = usb_register_dev(interface, &skel_class);
+	if (retval) {
+		/* something prevented us from registering this driver */
+		err("Not able to get a minor for this device.");
+		usb_set_intfdata(interface, NULL);
+		goto error;
+	}	
+
+	/* let the user know what node this device is now attached to */
+	dev_info(&interface->dev,
+		 "USB Skeleton device now attached to USBSkel-%d",
+		 interface->minor);
+	return 0;
+
+error:
+	if (dev)
+		/* this frees allocated memory */
+		kref_put(&dev->kref, skel_delete);
+	return retval;
 }
 
 static void joy_delete(struct kref *kref){
@@ -49,7 +139,7 @@ static void joy_delete(struct kref *kref){
 
 static void joy_disconnect(struct usb_interface *interface){
 	struct joy_dev *dev;
-	int minor = interface->minor;//minor number
+	int minor = interface->minor;//get minor number
 	dev = usb_get_intfdata(interface);//device->data = interface->dev->devive->data
 	usb_set_intfdata(interface, NULL);//save pointer of data to interface, interface->dev->device->data = NULL
 	usb_deregister_dev(interface, &joy_class);//deregister joy_class to interface
