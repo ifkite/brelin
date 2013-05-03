@@ -26,6 +26,21 @@
 /* Define these values to match your devices */
 #define USB_SKEL_VENDOR_ID	0x8380
 #define USB_SKEL_PRODUCT_ID	0x0003
+#define	KEYMASK_UP		0x00
+#define	KEYMASK_DOWN	0xFF
+#define	KEYMASK_LEFT	0x00
+#define	KEYMASK_RIGHT	0xFF
+#define KEYMASK_L1		0x01
+#define KEYMASK_L2		0x04
+#define KEYMASK_R1		0x02
+#define KEYMASK_R2		0x08
+#define	KEYMASK_Y		0x1F
+#define	KEYMASK_A		0x4F
+#define	KEYMASK_X		0x8F
+#define	KEYMASK_B		0x2F
+#define	KEYMASK_SELECT	0x10
+#define	KEYMASK_START	0x20
+#define INTERV_MILLI(ms)	(ms*HZ/1000)
 
 /* table of devices that work with this driver */
 static struct usb_device_id skel_table[] = {
@@ -103,7 +118,7 @@ static int skel_release(struct inode *inode, struct file *file)
 static ssize_t skel_read(struct file *file, char *buffer, size_t count,
 			 loff_t *ppos)
 {
-	copy_to_user(buf, gb_data, 8);
+	copy_to_user(buffer, gb_data, 8);
 	return 0;
 }
 
@@ -137,7 +152,7 @@ static struct usb_class_driver skel_class = {
 	.name =		"skel%d",
 	.fops =		&skel_fops,
 	.minor_base =	USB_SKEL_MINOR_BASE,
-}
+};
 static void joystick_irq(struct urb *urb)
 {
 	struct usb_joystick *js_dev = urb->context;
