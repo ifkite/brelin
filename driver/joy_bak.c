@@ -52,7 +52,7 @@ struct usb_joystick {
 	unsigned char			*in_buffer;	/* the buffer to receive data */
 	size_t					in_buffer_size;		/* the size of the receive buffer */
 	char					*data;
-	dma_addr_t				data_dma;
+	odma_addr_t				data_dma;
 	__u8					in_endpointAddr;	/* the address of the bulk in endpoint */
 	__u8					out_endpointAddr;	/* the address of the bulk out endpoint */
 	struct kref				kref;

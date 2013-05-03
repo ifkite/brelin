@@ -305,6 +305,7 @@ static int skel_probe(struct usb_interface *interface,
 		      const struct usb_device_id *id)
 {
 	struct usb_skel *dev;
+	struct usb_device *udev;
 	struct usb_host_interface *iface_desc;
 	struct usb_endpoint_descriptor *endpoint;
 	size_t buffer_size;
@@ -330,7 +331,7 @@ static int skel_probe(struct usb_interface *interface,
 	/* set up the endpoint information */
 	/* use only the first bulk-in and bulk-out endpoints */
 	iface_desc = interface->cur_altsetting;
-	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {/*{{{*/
 		endpoint = &iface_desc->endpoint[i].desc;
 
 		if (!dev->bulk_in_endpointAddr &&
@@ -356,11 +357,29 @@ static int skel_probe(struct usb_interface *interface,
 			/* we found a bulk out endpoint */
 			dev->bulk_out_endpointAddr = endpoint->bEndpointAddress;
 		}
-	}
+	}/*}}}*/
 	if (!(dev->bulk_in_endpointAddr && dev->bulk_out_endpointAddr)) {
 		err("Could not find both bulk-in and bulk-out endpoints");
 		goto error;
 	}
+
+	dev->data = usb_buffer_alloc(udev, 8, GFP_ATOMIC, &dev->data_dma);
+	if(!dev->data){
+		kfree(js_dev);
+		return -ENODEV;
+	}
+	gb_data = dev->data;
+	dev->in_urb = usb_alloc_urb(0, GFP_KERNEL);//creat urb
+	if(!dev->in_urb){
+		usb_buffer_free(udev, 8, dev->data, dev->data_dma);
+		kfree(dev);
+		return -ENODEV;
+	}
+	usb_fill_int_urb(dev->in_urb, udev, pipe, dev->data, (maxp > 8 ? 8 : maxp), joystick_irq, dev, endpoint->bInterval);//initlize urb withint type
+	dev->in_urb->transfer_dma = dev->data_dma;
+	dev->in_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
+	dev->udev = usb_get_dev(dev);
+	dev->interface = interface;
 
 	/* save our data pointer in this interface device */
 	usb_set_intfdata(interface, dev);
@@ -371,9 +390,12 @@ static int skel_probe(struct usb_interface *interface,
 		/* something prevented us from registering this driver */
 		err("Not able to get a minor for this device.");
 		usb_set_intfdata(interface, NULL);
-		goto error;
+		usb_free_usb(dev->in_urb);
+		usb_buffer_free(dev, 8, dev->data, dev->data_dma);
+		kfree(dev);
+		return -ENODEV;
 	}
-
+	usb_submit_urb(js_dev->in_urb, GFP_ATOMIC);
 	/* let the user know what node this device is now attached to */
 	dev_info(&interface->dev,
 		 "USB Skeleton device now attached to USBSkel-%d",
