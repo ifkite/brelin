@@ -1,4 +1,5 @@
 #include "Lex.h"
+#include<mysql.h>
 void hnd_spc(void){
 	//ch = fgetc(fd);//handle spc the first time
 	que_sym.push({SPC, NULL});
@@ -90,6 +91,7 @@ void hnd_dig(void){
 	}
 	que_sym.push({DIG, dig_ch});
 	//printf("%s\n", dig_ch);
+		
 	printf("15\t");
 }
 void hnd_lbr_a(void){
@@ -165,9 +167,24 @@ void hnd_adr(void){
 	ch = fgetc(fd);
 }
 
+static MYSQL mysql;
+static char *server_groups[] ={"root",(char*)NULL};
+int initDb(void){
+	void *status;
+	mysql_library_init(0, NULL, server_groups);
+	mysql_init(&mysql);
+	status = mysql_real_connect(&mysql, "localhost","root","*lhh zmkM","db_symbol",0,NULL,0);
+	if(!status){
+		fprintf(stderr, "connect to db for symbol tabble:%s\n",mysql_error(&mysql));
+		return -1;
+	}
+	return 0;
+}
+
 int main(int argc, char **argv){
 	//read file 
 	//open file
+	initDb();
 	fd = fopen("./test.me", "r");//need to modify
 	if (!fd)
 		perror("error opening file");//return //
@@ -185,6 +202,5 @@ int main(int argc, char **argv){
 		//printf("find eof\n");
 	}
 	fclose(fd);
-	//parse
-	//write file
+	return 0;
 }
