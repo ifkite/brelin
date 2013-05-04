@@ -1,0 +1,8 @@
+symbol,char char char char int
+	   class id name value offset;
+in lex, we store class, and name;
+in tex,in declaration, we get the class and name of identity,
+   and give the identity offset;//offset
+in tex, in assinment, we get the name and identity, and give
+   value;
+
