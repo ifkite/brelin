@@ -8,7 +8,7 @@ using std::stack;
 //read action tab and goto tab from file
 //modify act_tab in this func
 //l readTab()
-static int readTab(){
+static int readTab(void){
 	FILE* file;
 	file = fopen(tab_path , "r");
 	if(!file){
@@ -30,11 +30,38 @@ static int readTab(){
 	fclose(file);
 	return 0;
 }
+static int *input_buf;
+//input_buf static size of memory version
+
+static int readBuf(void){
+	FILE *file;
+	file = fopen(input_path, "r");
+	if(!file){
+		perror("error open input file\n");
+	}
+	else{
+		int num = 0, i = 0, buf_siz = 1024;
+		input_buf =(int *) malloc(buf_siz);
+		while(fscanf(file, "%d", &num) != EOF){
+			input_buf[i] = num;
+			++i;
+			if(i == buf_siz){
+				buf_siz *= 2;
+				input_buf = (int *)realloc(input_buf, buf_siz);
+			}
+		}
+		input_buf[i] = 20;
+	}
+}
+
 //c
-const int BUF_SIZ = 128;
-int input_buf[BUF_SIZ] = {0, 1, 2, 3, 6, 5, 19, 7, 5, 19, 5, 14, 15,19, 16, 1,5, 14, 15, 2, 3, 5, 14, 15, 19,4, 4, 20 };
+//const int BUF_SIZ = 128;
+//int input_buf[BUF_SIZ] = {0, 1, 2, 3, 6, 5, 19, 7, 5, 19, 5, 14, 15,19, 16, 1,5, 14, 15, 2, 3,18,1,5,14,15,2,3,5,14, 15, 19, 4 ,4, 4, 20 };
+//int input_buf[BUF_SIZ] = {0,1,2,3,6,5,14,15,19,16,1,5,14,15,2,3,18,1,5,14,15,2,3,16,5,14,15,19,4,4,5,14,5,9,5,11,5,19,5,14,5,9,5,19,4};
 int main(){
 	readTab();
+	readBuf();
+	
 	int buf;
 	stack<int> stk_stat;
 	stack<int> stk_input;

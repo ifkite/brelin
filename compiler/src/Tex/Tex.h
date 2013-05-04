@@ -55,6 +55,7 @@ const Rule rul_tab[RUL_SIZ] = {
 const int STAT_SIZ = 68;
 const int ID_SIZ = 39;
 const char *tab_path = "./gram_matrix.txt\0";
+const char *input_path = "./input.txt\0";
 
 int act_tab[STAT_SIZ][ID_SIZ];
 
