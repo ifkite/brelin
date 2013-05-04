@@ -44,10 +44,11 @@
 #define SIZ   16//func_tab size
 #include<ctype.h>
 #include<stdio.h>
-#include<string.h>
+#include<cstring>
 #include<stdlib.h>
 #include<queue>
 using std::queue;
+using std::strcmp;
 int ch;
 FILE *fd;
 typedef int (*isfuncs)(int);

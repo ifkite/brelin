@@ -1,5 +1,8 @@
 #include "Lex.h"
 #include<mysql.h>
+
+#include<string>
+using std::string;
 void hnd_spc(void){
 	//ch = fgetc(fd);//handle spc the first time
 	que_sym.push({SPC, NULL});
@@ -67,9 +70,10 @@ void hnd_let(void){
 		printf("%d\t", key_tab[hnd_id - BASE].tex_num);
 	}
 	else{
-
+		string sql_cmd = ("insert into symbol(class, id, name, value, offset) values");
+		string sql_argv(id_ch);
 		que_sym.push({ID_WRD,id_ch });
-
+		
 		//printf("%s,%d\n", id_ch, ID_WRD);
 		printf("5\t");
 	}
