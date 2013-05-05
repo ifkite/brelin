@@ -3,28 +3,6 @@
 
 #include<string>
 using std::string;
-
-
-static MYSQL mysql;
-static char *server_groups[] ={"root",(char*)NULL};
-int initDb(void){
-	void *status;
-	mysql_library_init(0, NULL, server_groups);
-	mysql_init(&mysql);
-	status = mysql_real_connect(&mysql, "localhost","root","*lhh zmkM","db_symbol",0,NULL,0);
-	if(!status){
-		fprintf(stderr, "connect to db for symbol tabble:%s\n",mysql_error(&mysql));
-		return -1;
-	}
-	//cleanDB();
-	return 0;
-}
-void cleanDb(void){
-	string sql_cmd = "delete * from symbol";
-	mysql_query(&mysql, sql_cmd.c_str());
-	fprintf(stderr,"clean symbol db\n");
-}
-
 void hnd_spc(void){
 	//ch = fgetc(fd);//handle spc the first time
 	que_sym.push({SPC, NULL});
@@ -94,8 +72,7 @@ void hnd_let(void){
 	else{
 		string sql_cmd = ("insert into symbol(class, id, name, value, offset) values ('5', '', '");
 		string sql_argv(id_ch);
-		sql_cmd = sql_cmd + sql_argv + "', '',0 )" ;
-		mysql_query(&mysql, sql_cmd.c_str());
+		sql_cmd = sql_cmd + sql_argv + "', '',0 )" 
 
 		que_sym.push({ID_WRD,id_ch });
 		
@@ -196,13 +173,24 @@ void hnd_adr(void){
 	ch = fgetc(fd);
 }
 
-
+static MYSQL mysql;
+static char *server_groups[] ={"root",(char*)NULL};
+int initDb(void){
+	void *status;
+	mysql_library_init(0, NULL, server_groups);
+	mysql_init(&mysql);
+	status = mysql_real_connect(&mysql, "localhost","root","*lhh zmkM","db_symbol",0,NULL,0);
+	if(!status){
+		fprintf(stderr, "connect to db for symbol tabble:%s\n",mysql_error(&mysql));
+		return -1;
+	}
+	return 0;
+}
 
 int main(int argc, char **argv){
 	//read file 
 	//open file
 	initDb();
-	cleanDb();
 	fd = fopen("./test.me", "r");//need to modify
 	if (!fd)
 		perror("error opening file");//return //
