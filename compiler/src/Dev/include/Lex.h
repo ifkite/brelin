@@ -283,11 +283,20 @@ void hnd_let(void){
 		printf("%d\t", tmp_tex_num);
 	}
 	else{
-		string sql_cmd = ("insert into symbol(class, id, name, value, offset) values ('5', '', '");
-		string sql_argv(id_ch);
-		sql_cmd = sql_cmd + sql_argv + "', '',0 )" ;
-		mysql_query(&mysql, sql_cmd.c_str());
-
+		static int id_id = 0;//to avoid use id name,use the id of identifer
+		char id_buf[8];
+		sprintf(id_buf,"%d",id_id);
+		string sql_cmd("insert into symbol(name) values('");
+		sql_cmd.append(id_ch);
+		sql_cmd.append("')");
+		//sql success
+		if(!mysql_query(&mysql, sql_cmd.c_str())){
+			string sql_mod("update symbol set id = ");
+			sql_mod.append(id_buf);
+			sql_mod.append(" where id = 0");
+			++id_id;
+		}
+		
 		vec_sym.push_back({5,id_ch });
 		
 		//printf("%s,%d\n", id_ch, ID_WRD);
