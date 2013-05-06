@@ -28,18 +28,13 @@ int main(){
 		//bad code style
 		vec_sym.push_back({20,NULL});
 		fclose(fd);
-		int myl;
-		for(myl =0; myl < vec_sym.size(); ++myl)
-			if(vec_sym[myl].name)
-				fprintf(stderr, "%d\n",vec_sym[myl].id_num);
 	}
-
 	//Tex
 	{
 		//declaration semantic analyze
 		decSem(&vec_int,"4");
-		//decSem(vec_char, 1);
-		//decSem(vec_void,1);
+		decSem(&vec_char, "1");
+		decSem(&vec_void,"1");
 		readTab();
 		
 		int buf;

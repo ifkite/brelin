@@ -203,7 +203,7 @@ int initDb(void){
 	return 0;
 }
 void cleanDb(void){
-	string sql_cmd = "delete * from symbol";
+	string sql_cmd = "delete from symbol";
 	mysql_query(&mysql, sql_cmd.c_str());
 	fprintf(stderr,"clean symbol db\n");
 }
@@ -283,7 +283,7 @@ void hnd_let(void){
 		printf("%d\t", tmp_tex_num);
 	}
 	else{
-		static int id_id = 0;//to avoid use id name,use the id of identifer
+		static int id_id = 1;//to avoid use id name,use the id of identifer
 		char id_buf[8];
 		sprintf(id_buf,"%d",id_id);
 		string sql_cmd("insert into symbol(name) values('");
@@ -294,10 +294,19 @@ void hnd_let(void){
 			string sql_mod("update symbol set id = ");
 			sql_mod.append(id_buf);
 			sql_mod.append(" where id = 0");
+			mysql_query(&mysql, sql_mod.c_str());
 			++id_id;
 		}
-		
-		vec_sym.push_back({5,id_ch });
+		string sql_res("select id from symbol where name ='");
+		sql_res.append(id_ch);
+		sql_res.append("'");
+		mysql_query(&mysql, sql_res.c_str());
+		MYSQL_RES *res;
+		MYSQL_ROW row;
+		res = mysql_store_result(&mysql);
+		row = mysql_fetch_row(res);
+		//printf("mysql row%s\n",row[0]);
+		vec_sym.push_back({5,atoi(row[0])});
 		
 		//printf("%s,%d\n", id_ch, ID_WRD);
 		printf("5\t");
@@ -318,7 +327,7 @@ void hnd_dig(void){
 		else
 			break;
 	}
-	vec_sym.push_back({15, dig_ch});
+	vec_sym.push_back({15, atoi(dig_ch)});
 	//printf("%s\n", dig_ch);
 		
 	printf("15\t");
