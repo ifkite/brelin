@@ -1,0 +1,135 @@
+0	1	2	3	6	5	19	6	5	19	16	1	5	14	15	2	3	18	1	5	14	15	2	3	16	1	5	14	15	2	3	5	14	15	19	4	4	4	5	14	5	9	5	11	5	19	5	14	5	9	5	19	4	shift
+shift
+shift
+shift
+shift
+Type_specifer => int 
+shift
+shift
+Var_declaration => Type_specifer identity $ 
+Local_declarations => Var_declaration  
+shift
+Type_specifer => int 
+shift
+shift
+Var_declaration => Type_specifer identity $ 
+Local_declarations => Local_declarations Var_declaration 
+shift
+shift
+shift
+Var => identity 
+shift
+shift
+Factor => num 
+Term => Factor 
+Additive_expression => Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+shift
+shift
+shift
+shift
+Var => identity 
+shift
+shift
+Factor => num 
+Term => Factor 
+Additive_expression => Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+shift
+shift
+shift
+shift
+Var => identity 
+shift
+shift
+Factor => num 
+Term => Factor 
+Additive_expression => Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+shift
+shift
+Var => identity 
+shift
+shift
+Factor => num 
+Term => Factor 
+Additive_expression => Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+Expression_stmt => Expression $ 
+Statement => Expression_stmt 
+shift
+If_stmt => if ( Expression ) { Statement } 
+Statement => If_stmt 
+shift
+While_stmt => while ( Expression ) { Statement } 
+Statement => While_stmt 
+shift
+If_stmt => if ( Expression ) { Statement } 
+Statement => If_stmt 
+Statement_list => Statement 
+shift
+Var => identity 
+shift
+shift
+Var => identity 
+Factor => Var 
+Term => Factor 
+Additive_expression => Term 
+shift
+Addop => + 
+shift
+Var => identity 
+Factor => Var 
+Term => Factor 
+shift
+Mulop => * 
+shift
+Var => identity 
+Factor => Var 
+Term => Term Mulop Factor 
+Additive_expression => Additive_expression Addop Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+Expression_stmt => Expression $ 
+Statement => Expression_stmt 
+Statement_list => Statement_list Statement  
+shift
+Var => identity 
+shift
+shift
+Var => identity 
+Factor => Var 
+Term => Factor 
+Additive_expression => Term 
+shift
+Addop => + 
+shift
+Var => identity 
+Factor => Var 
+Term => Factor 
+Additive_expression => Additive_expression Addop Term 
+Simple_expression => Additive_expression 
+Expression => Simple_expression 
+Expression => Var = Expression 
+shift
+Expression_stmt => Expression $ 
+Statement => Expression_stmt 
+Statement_list => Statement_list Statement  
+shift
+Compound_stmt => { Local_declarations Statement_list }  
+Program => main ( ) Compound_stmt  
+Accept!

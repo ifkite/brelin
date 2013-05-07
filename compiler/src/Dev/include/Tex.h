@@ -135,5 +135,20 @@ int readBuf(void){
 	}
 }
 */
+//symbol for semantic analyze
+typedef struct SemSym{
+	int sym_val;//symol value, intput value form lex
+	int sem_val;//value for semantic analyzing proc
+	int id_id;//for id
+}SemSym;
+//will visited by Sem.h funcs and Tex.cpp proc
+stack<SemSym> stk_input;
+/*
+void mypush(stack<SemSym> & stk,const int sym_val){
+	SemSym tmp_sem_sym = {sym_val, 0};
+	stk.push(tmp_sem_sym);
+}
+*/
+
 
 #endif

@@ -37,11 +37,11 @@ int main(){
 		decSem(&vec_void,"1");
 		readTab();
 		
-		int buf;
+		int buf, tmp_sym_num;
 		stack<int> stk_stat;
-		stack<int> stk_input;
 		stk_stat.push(0);//0 is start state
 		buf = vec_sym[0].id_num;
+		tmp_sym_num = vec_sym[0].sym_num;
 		int handle;
 		int action;
 		int stat;
@@ -77,12 +77,13 @@ int main(){
 				switch(action){
 					case SHIFT:	{
 						printf("shift\n");
-						//only SHIFT action can modify buf and the move the pointer, the pointer points to ele next to buf
+						//only SHIFT action can modify buf and move the pointer, the pointer points to element next to buf
 
 						//push buf in stk_input, and input_buf[next] copy to buf, move next , ATTENTION:   MAYBE BUGS HERE!!!!
 						//push stat in stk_stat
-						stk_input.push(buf);
+						stk_input.push({buf, 0, tmp_sym_num});
 						buf = vec_sym[next].id_num;
+						tmp_sym_num = vec_sym[next].sym_num;
 						if(buf)
 							++next;
 						stk_stat.push(stat);
@@ -95,6 +96,8 @@ int main(){
 						pop_time = rul_tab[rul_num].id_quantity;
 						left_exp = rul_tab[rul_num].id_var;
 						printf("%s\n", rul_tab[rul_num].name);
+						int sem_info;//this is the info from bottom to top, WITHOUT top to bottom info
+						//sem_info = (*func_tab[rul_num])();//semantic analyze
 						int loop;
 						//then pop stat and input in stack by rule
 						for(loop = 0; loop < pop_time; ++loop){
@@ -102,7 +105,7 @@ int main(){
 							stk_input.pop();
 						}
 						//push left express to input stack
-						stk_input.push(left_exp);
+						stk_input.push({left_exp,sem_info, 0});
 						
 						int next_stat;
 						//search gotoTab, get the next stat value
