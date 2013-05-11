@@ -1,173 +1,130 @@
-#include<linux/kernel.h>
-#include<linux/errno.h>
-#include<linux/init.h>
-#include<linux/slab.h>
-#include<linux/module.h>
-#include<linux/kref.h>
-#include<linux/uaccess.h>
-#include<linux/mutex.h>
-//need crtl endpoint, to get info from devive, get dev status, send cmd to dev
-//intertupt endpoint, transform small data
-#define USB_JOY_VENDOR_ID 0x8380
-#define USB_JOY_PRODUCT_ID 0x0003
-static struct usb_device_id joy_table[] = {
-	{ USB_DEVICE(USB_JOY_VENDOR_ID, USB_JOY_PRODUCT_ID)},
-	{ }
-}
+#include <linux/kernel.h>
+#include <linux/errno.h>
+#include <linux/init.h>
+#include <linux/slab.h>
+#include <linux/module.h>
+#include <linux/kref.h>
+#include <linux/uaccess.h>
+#include <linux/usb.h>
+#include <linux/mutex.h>
 
-MODULE_DEVICE_TABLE(usb, joy_table);
-//usb_interface
-//usb_device *id
-struct joy_dev {
+#define USB_JOYSTICK_VENDOR_ID 0x8380
+#define USB_JOYSTICK_PRODUCT_ID 0x0003
+static struct usb_device_id joystick_ids[] = {
+	//将vendor 和 product id 记录到模块镜像中,一旦有卡插入,驱动模块将被加载到内核运行.
+	{USB_DEVICE(USB_JOYSTICK_VENDOR_ID, USB_JOYSTICK_PRODUCT_ID)},
+	{	}//termiante
 };
 
-static int joy_probe (struct usb_interface *interface, const struct usb_device_id *id){
-	printk("joy_probe called\n");
-	struct joy_dev *dev;
+MODULE_DEVICE_TABLE(usb, joystick_ids);
+
+typedef struct {
+	struct usb_device        *usbdev;
+	struct usb_interface     *interface;
+	struct urb			     *ctrl_urb;
+	struct usb_ctrlrequest   ctrl_req;
+	unsigned char            *irq_in_buf;//通过它获取手柄数据
+	size_t                   irq_in_len;
+	__u8                     irq_in_addr;
+}joystick_device_t;
+
+//need to know
+#define JOYSTICK_MINOR_BASE 192
+
+static ssize_t joystick_read(struct file *file, char *buffer, size_t count, loff_t *ppos){
+	printk("joystick read called\n");
+	return 0;
+}
+
+static ssize_t joystick_write(struct file *file, const char *user_buffer, size_t count, loff_t *ppos){
+	printk("joystick write called\n");
+	return 0;
+}
+
+static int joystick_open(struct inode *inode, struct file *file ){
+	printk("joystick open called\n");
+	return 0;
+}
+static int joystick_release(struct inode *inode, struct file *file){
+	printk("joystick release called\n");
+	return 0;
+}
+
+static struct file_operations joystick_fops = {
+	.owner = THIS_MODULE,
+	.read = joystick_read,
+	.write = joystick_write,
+	//.ioctl = joystick_ioctl,
+	.open = joystick_open,
+	.release = joystick_release,
+};
+
+static struct usb_class_driver joystick_class = {
+	.name = "joystick",
+	.fops = &joystick_fops,
+	.minor_base = JOYSTICK_MINOR_BASE,//从设备号 开始
+};
+
+static int joystick_probe(struct usb_interface *interface, const struct usb_device_id *id){
+	printk("joystick probe called\n");
+	/*
 	struct usb_host_interface *iface_desc;
 	struct usb_endpoint_descriptor *endpoint;
-	size_t buffer_size;
-	int i;
+	joystick_device_t *joy_dev;
 	int retval = -ENOMEM;
-	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-	if (!dev) {
-		err("Out of memory");
-		goto error;
-	}
-	kref_init(&dev->kref);//counter initlize
-	sema_init(&dev->limit_sem, WRITES_IN_FLIGHT);
-	mutex_init(&dev->io_mutex);
-	spin_lock_init(&dev->err_lock);
-//	init_usb_anchs can be called to have access to URBs which are to be executed without bothering to track themor(&dev->submitted);	
-	init_usb_anchor(&dev->submitted);
-	init_completion(&dev->bulk_in_completion);
-	dev->udev = usb_get_dev(interface_to_usbdev(interface));
-	dev->interface = interface;
-	iface_desc = interface->cur_altsetting;	
-	//deal with all endpoints
-	for(i = 0; i < iface_desc->desc.bNumEndpoints; ++i){/*{{{*/
-		endpoint = &iface_desc->endpoint[i].desc;
-		printk("endpoint %d:\n",i);
-		if(!endpoint)
-			return -ENODEV;
-		printk("direction(%02X): ", endpoint->bEndpointAddress);
-		if(endpoint->bEndpointAddress & USB_DIR_IN)
-			printk("to host\n");
-		else
-			printk("to device\n");
-		printk("Endpoint type: ");
-		//judge the attr of endpoints
-		switch(endpoint->bmAttributes){
-			case 0:{
-				printk("control\n");
-				//need some code
-				goto error;
-				//break;
-			}
-			case 1:{
-				printk("ISOC\n");
-				//need some code
-				goto error;
-				//break;
-			}/
-			//deal with bulk endpoints
-			case 2:{
-				printk("bulk\n");
-				if (!dev->bulk_in_endpointAddr &&
-				usb_endpoint_is_bulk_in(endpoint)) {
-					/*found a bulk in endpoint */
-					buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
-					dev->bulk_in_size = buffer_size;
-					dev->bulk_in_endpointAddr = endpoint->bEndpointAddress;
-					dev->bulk_in_buffer = kmalloc(buffer_size, GFP_KERNEL);
-					if (!dev->bulk_in_buffer) {
-						err("Could not allocate bulk_in_buffer");
-						goto error;
-					}
-					dev->bulk_in_urb = usb_alloc_urb(0, GFP_KERNEL);
-					if (!dev->bulk_in_urb) {
-						err("Could not allocate bulk_in_urb");
-						goto error;
-					}
-				}	
-
-				if (!dev->bulk_out_endpointAddr &&
-					usb_endpoint_is_bulk_out(endpoint)) {
-					/* we found a bulk out endpoint */
-					dev->bulk_out_endpointAddr = endpoint->bEndpointAddress;
-				}
-				break;
-			}
-			case 3:{
-				printk("intterupt\n");//hopefully this
-				goto error;
-				//break;
-			}
-			default:
-				printk("Unkown.\n");
-				goto error;
-		}
-		printk("\n");
-	}/*}}}*/
-	//if endpoint is bulk
-	//save data to interface
-	usb_set_intfdata(interface, dev);
-	//regist the device
-	retval = usb_register_dev(interface, &skel_class);
-	if (retval) {
-		/* something prevented us from registering this driver */
-		err("Not able to get a minor for this device.");
-		usb_set_intfdata(interface, NULL);
-		goto error;
-	}	
-
-	/* let the user know what node this device is now attached to */
-	dev_info(&interface->dev,
-		 "USB Skeleton device now attached to USBSkel-%d",
-		 interface->minor);
-	return 0;
-
-error:
-	if (dev)
-		/* this frees allocated memory */
-		kref_put(&dev->kref, skel_delete);
+	//1.为joystick_device_t 分配内存, what is GFP_KERNEL
+	joy_dev = kzalloc(sizeof(joystick_device_t), GFP_KERNEL);
+	//2初始化joystick_device_t 的相关变量
+	joy_dev->usbdev = usb_get_dev(interface_to_usbdev(interface));
+	joy_dev->interface = interface;
+	//获得结点数据,数据由枚举过程提供 
+	iface_desc = interface->cur_altsetting;
+	
+	usb_set_intfdata(interface, joy_dev);
+	
+	//retval = usb_register_dev(interface, &joystick_class);
+	//if(retval){
+	//	usb_set_intfdata(interface, NULL);
+	//	return retval;
+	//}
+	
+	retval = usb_register_dev(interface, NULL);
 	return retval;
+	printk("now joystick device attached to /dev/joystick \n");
+	*/
+	return 0;	
+	//3.将字符设备/dev/joystick 倒给用户空间
 }
 
-static void joy_delete(struct kref *kref){
+static void joystick_disconnect(struct usb_interface *interface){
+	/*
+	joystick_device_t *joy_dev;
+	joy_dev = usb_get_intfdata(interface);
+	usb_set_intfdata(interface, NULL);
+	usb_deregister_dev(interface, &joystick_class);
+	*/
 }
 
-static void joy_disconnect(struct usb_interface *interface){
-	struct joy_dev *dev;
-	int minor = interface->minor;//get minor number
-	dev = usb_get_intfdata(interface);//device->data = interface->dev->devive->data
-	usb_set_intfdata(interface, NULL);//save pointer of data to interface, interface->dev->device->data = NULL
-	usb_deregister_dev(interface, &joy_class);//deregister joy_class to interface
-	mutex_lock(&dev->io_mutex);
-	dev->interface = NULL;
-	mutex_unlock(&dev->io_mutex);
-	usb_kill_anchored_urbs(&dev->submitted);//free unused urbs
-	kref_put(&dev->kref, joy_delete);//minus the referance of dev->kref
-	dev_info(&interface->dev, "USB Skeleton #%d now disconnected", minor);
-}
-
-static struct usb_driver joy_driver = {//where 's  usb_driver
+static struct usb_driver joystick_driver = {
 	.name = "joystick",
-	.probe = joy_probe, //for connect
-	.disconnect = joy_disconnect,// for disconnect
-	.id_table = joy_table,
+	.probe = joystick_probe,
+	.disconnect = joystick_disconnect,
+	.id_table = joystick_ids,
 };
-static int __init joy_init(void){
-	int result;
-	result = usb_register(&joy_driver);//not include header file
-	if (result)
-		err("joy_register failed. error num %d\n",result);
 
-	printk("joy_register success\n");
-	return result;
+static int __init usb_joystick_init(void){
+	printk("McDolphin joystick initlized\n");
+	int result;
+	result = usb_register(&joystick_driver);
+	return 0;
 }
-static int __exit joy_exit(void){
-	usb_deregister(&joy_driver);
+
+static void __exit usb_joystick_exit(void){
+	//usb_deregister(&joystick_driver);
+	printk("McDolphin joystick exit\n");
+	return;
 }
-module_init(joy_init);
-module_exit(joy_exit);
+
+module_init(usb_joystick_init);
+module_exit(usb_joystick_exit);
+MODULE_LICENSE("GPL");
